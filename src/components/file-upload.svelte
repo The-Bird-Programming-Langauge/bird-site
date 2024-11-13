@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { compileWasm } from '../lib/compile';
+	import { uploadWasm } from '../lib/compile';
 	let files: FileList | null = $state(null);
 </script>
 
@@ -11,7 +11,7 @@
 		if (!files) return;
 		if (files.length === 0) return;
 		const arrayBuffer = await files.item(0)!.arrayBuffer();
-		await compileWasm(arrayBuffer);
+		await uploadWasm(arrayBuffer);
 	}}
 >
 	Run
