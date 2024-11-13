@@ -1,2 +1,9 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<script lang="ts">
+	import TextEditor from '$lib/text-editor.svelte';
+	import FileUpload from '$lib/file-upload.svelte';
+</script>
+
+<h1 class="mb-2">The Bird Programming Language</h1>
+
+<FileUpload></FileUpload>
+<TextEditor></TextEditor>
