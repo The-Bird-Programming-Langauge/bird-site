@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { compileWasm } from './compile';
+	import { compileWasm } from '../lib/compile';
 	let files: FileList | null = $state(null);
 </script>
 

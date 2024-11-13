@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { compileWat } from './compile';
+	import { compileWat } from '../lib/compile';
 
 	let code = $state('');
 </script>
