@@ -5,7 +5,6 @@ import { textEditorCode } from './text-editor-code';
 
 export async function compileWat(code: string) {
     try {
-
         const wabtInterface = await wabt();
         const mod = wabtInterface.parseWat('test.wat', code);
         const buffer = mod.toBinary({ log: true }).buffer;

@@ -14,5 +14,5 @@
 		await uploadWasm(arrayBuffer);
 	}}
 >
-	Run
+	Upload & Run
 </button>
