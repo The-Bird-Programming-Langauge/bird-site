@@ -7,6 +7,8 @@
 	import Center from '../components/center.svelte';
 	import Squeeze from '../components/squeeze.svelte';
 	import type { Unsubscriber, Writable } from 'svelte/store';
+	import Card from '../components/card.svelte';
+	import Code from '../components/code.svelte';
 
 	let output: string[] = [];
 
@@ -27,38 +29,77 @@
 			sub();
 		}
 	});
+
+	let examples = [
+		{
+			title: 'Familiar Syntax',
+			subtitle: 'Simple and easy to read',
+			code: `
+fn add(x: int, y: int) -> int {
+  return x + y;
+}
+		`
+		},
+		{
+			title: 'Modern Features',
+			subtitle: 'Novel and Expressive',
+			code: `
+fn fib(n: int) -> int {
+	return match n {
+		0 => 0,
+		1 => 1,
+		else => fib(n - 1) + fib(n - 2),
+	}
+}`
+		},
+		{
+			title: 'Expressive Types',
+			subtitle: 'Static and Strongly Typed',
+			code: `
+fn add<T>(x: T, y: T) -> T {	
+	return x + y;
+}
+		`
+		}
+	];
 </script>
 
-<Center>
-	<Squeeze>
-		<div class="mb-4">
-			<Header></Header>
-		</div>
+<Header></Header>
+<div class="p-12">
+	<Center>
+		<Squeeze>
+			<div class="flex flex-col gap-12">
+				<div>
+					<h1 class="whitespace-pre text-slate-100">A Fast, Principled, and Web-First Language.</h1>
 
-		<div class="mb-2">
-			<FileUpload></FileUpload>
-		</div>
+					<p
+						class="
+					mt-4
+					w-1/2
+					text-lg
+					text-slate-300
+				"
+					>
+						Bird is a fast, principled, and web-first language. It is designed to be compiled to
+						WebAssembly and run in the browser. Bird is a statically typed language with a focus on
+						simplicity and performance.
+					</p>
+				</div>
 
-		<div class="flex flex-col gap-4">
-			<MyCodeMirror></MyCodeMirror>
-			<div class="flex w-full flex-col gap-4">
-				<div
-					class="m-0 flex h-96 flex-grow flex-col overflow-scroll rounded-md border-2 border-blue-500 p-4"
-					id="console"
-				>
-					{#each output as line}
-						<p>{line}</p>
+				<div class="flex w-full gap-12">
+					{#each examples as example}
+						<Card title={example.title} subtitle={example.subtitle}>
+							<Code code={example.code}></Code>
+						</Card>
 					{/each}
 				</div>
-				<button
-					class="w-1/6 self-end rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
-					onclick={() => {
-						consoleOutput.set([]);
-					}}
-				>
-					Clear
-				</button>
+
+				<h1 class="text-center text-slate-100">Try out Bird!</h1>
+				<div class="flex flex-col gap-4">
+					<FileUpload></FileUpload>
+					<MyCodeMirror></MyCodeMirror>
+				</div>
 			</div>
-		</div>
-	</Squeeze>
-</Center>
+		</Squeeze>
+	</Center>
+</div>
