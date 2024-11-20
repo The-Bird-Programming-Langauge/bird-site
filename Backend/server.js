@@ -1,5 +1,10 @@
-const express = require("express")
+const express = require('express');
+const cors = require('cors');
 const app = express();
+const { exec } = require('child_process');
+
+app.use(cors());
+app.use(express.json());
 
 
 
@@ -7,11 +12,16 @@ const PORT = 5174;
 
 
 
-app.get('/code-output', async (req, res) => {
-    const codeInput = req.query.code;
-    let result = "test";
+app.post('/compile-bird', (req, res) => {
+    const code = req.body.code;
 
-    res.json(result);
+    exec(`./compiler ${code}`, (err, stdout, stderr) => {
+        console.log(err);
+        console.log(stdout);
+        console.log(stderr);
+    });
+
+    res.send("test");
 });
 
 

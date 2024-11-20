@@ -2,7 +2,7 @@
 	import CodeMirror from 'svelte-codemirror-editor';
 	import { textEditorCode } from '$lib/text-editor-code';
 	import { onDestroy, onMount } from 'svelte';
-	import { compileWat } from '$lib/compile';
+	import { compileBird } from '$lib/compile';
 	import type { Unsubscriber } from 'svelte/store';
 	import { consoleOutput } from '$lib/console-output';
 
@@ -105,7 +105,7 @@ fn factorial(n: int) -> int {
 				type="submit"
 				class="w-fit rounded bg-teal-100 px-4 py-2 font-bold text-slate-700 hover:bg-teal-300"
 				onclick={async () => {
-					await compileWat(code);
+					await compileBird(code);
 				}}
 			>
 				Run

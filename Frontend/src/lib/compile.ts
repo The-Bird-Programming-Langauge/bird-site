@@ -3,6 +3,22 @@ import { consoleOutput } from './console-output';
 import { textEditorCode } from './text-editor-code';
 
 
+export async function compileBird(code: string) {
+    console.log("foo");
+    const response = await fetch(`http://localhost:5174/compile-bird`, {
+        headers: {
+            "Content-Type": "application/json"
+        },
+        method: 'POST',
+        body: JSON.stringify({ code })
+    });
+    console.log("response", response);
+    const data = await response.text();
+    console.log(data);
+    
+    consoleOutput.update((old) => [...old, data]);
+}
+
 export async function compileWat(code: string) {
     try {
         const wabtInterface = await wabt();
