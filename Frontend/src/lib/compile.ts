@@ -13,10 +13,11 @@ export async function compileBird(code: string) {
         body: JSON.stringify({ code })
     });
     console.log("response", response);
-    const data = await response.text();
-    console.log(data);
-    
-    consoleOutput.update((old) => [...old, data]);
+
+    const buffer = await response.arrayBuffer();
+    console.log("buffer", buffer);
+
+    compileWasm(buffer);
 }
 
 export async function compileWat(code: string) {
@@ -24,6 +25,26 @@ export async function compileWat(code: string) {
         const wabtInterface = await wabt();
         const mod = wabtInterface.parseWat('test.wat', code);
         const buffer = mod.toBinary({ log: true }).buffer;
+        const module = await WebAssembly.compile(buffer);
+        const instance = new WebAssembly.Instance(module, {
+            env: {
+                print: (value: any) => {
+                    console.log(value);
+                    consoleOutput.update((old) => [...old, value]);
+                }
+            }
+        });
+
+        (instance.exports.main as Function)();
+    } catch (e) {
+        consoleOutput.update((old) =>
+            [...old, `${e}`]
+        );
+    }
+}
+
+export async function compileWasm(buffer: ArrayBuffer) {
+    try {
         const module = await WebAssembly.compile(buffer);
         const instance = new WebAssembly.Instance(module, {
             env: {
