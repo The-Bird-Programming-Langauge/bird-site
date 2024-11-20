@@ -24,12 +24,12 @@ app.post('/compile-bird', (req, res) => {
         console.log(err);
         console.log(stdout);
         console.log(stderr);
+
+        const buffer = fs.readFileSync('output.wasm');
+
+        res.type('application/octet-stream'); 
+        res.send(buffer);
     });
-
-    const buffer = fs.readFileSync('output.wasm');
-
-    res.type('application/octet-stream'); 
-    res.send(buffer);
 });
 
 app.listen(PORT, () => {

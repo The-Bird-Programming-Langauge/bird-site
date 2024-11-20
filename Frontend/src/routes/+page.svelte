@@ -86,7 +86,7 @@ fn add<T>(x: T, y: T) -> T {
 					</p>
 				</div>
 
-				<div class="flex w-full gap-12">
+				<div class="grid grid-cols-2 gap-6">
 					{#each examples as example}
 						<Card title={example.title} subtitle={example.subtitle}>
 							<Code code={example.code}></Code>

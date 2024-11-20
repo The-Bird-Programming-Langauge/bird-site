@@ -59,8 +59,12 @@
 	<div class="flex w-full justify-between gap-2">
 		<select
 			class="text-slate-200"
-			onchange={(ev) => {
-				switch (ev.target.value) {
+			onchange={(
+				ev: Event & {
+					currentTarget: EventTarget & HTMLSelectElement;
+				}
+			) => {
+				switch (ev.currentTarget.value) {
 					case 'helloWorld':
 						textEditorCode.set(`
 print "Hello, World!";
@@ -75,6 +79,7 @@ fn fib(n: int) -> int {
 	return fib(n - 1) + fib(n - 2);
 }
 						`);
+						break;
 					case 'factorial':
 						textEditorCode.set(`
 fn factorial(n: int) -> int {
@@ -84,6 +89,7 @@ fn factorial(n: int) -> int {
 	return n * factorial(n - 1);
 }
 						`);
+						break;
 					default:
 				}
 			}}
