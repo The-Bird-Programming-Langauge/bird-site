@@ -1,3 +1,3 @@
-<div class="w-3/4">
+<div class="w-2/3">
 	<slot></slot>
 </div>
