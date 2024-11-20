@@ -7,7 +7,7 @@
 	<input bind:files type="file" id="file" accept=".wasm" />
 	<button
 		type="submit"
-		class="rounded bg-teal-100 px-4 py-2 font-bold text-slate-700 hover:bg-teal-300"
+		class="rounded bg-primary px-4 py-2 font-bold text-dark hover:bg-accent"
 		onclick={async () => {
 			if (!files) return;
 			if (files.length === 0) return;

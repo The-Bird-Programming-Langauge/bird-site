@@ -42,13 +42,13 @@
 			bind:value={code}
 			styles={{
 				div: {
-					'background-color': 'rgb(204 251 241)',
-					color: 'color: rgb(51 65 85)'
+					'background-color': 'var(--primary)',
+					color: 'color: var(--dark)'
 				}
 			}}
 		/>
 		<div
-			class="m-0 flex h-24 flex-grow flex-col overflow-auto rounded-b-[0.5rem] border-2 border-[ligthblue] p-4"
+			class="m-0 flex h-24 flex-grow flex-col overflow-auto rounded-b-[0.5rem] border-2 border-primary p-4"
 			id="console"
 		>
 			{#each output as line}
@@ -58,7 +58,7 @@
 	</div>
 	<div class="flex w-full justify-between gap-2">
 		<select
-			class="text-slate-200"
+			class="text-light"
 			onchange={(ev) => {
 				switch (ev.target.value) {
 					case 'helloWorld':
@@ -94,7 +94,7 @@ fn factorial(n: int) -> int {
 		</select>
 		<div class="flex gap-2">
 			<button
-				class="w-fit rounded bg-teal-100 px-4 py-2 font-bold text-slate-700 hover:bg-teal-300"
+				class="w-fit rounded bg-primary px-4 py-2 font-bold text-dark hover:bg-accent"
 				onclick={() => {
 					consoleOutput.set([]);
 				}}
@@ -103,7 +103,7 @@ fn factorial(n: int) -> int {
 			</button>
 			<button
 				type="submit"
-				class="w-fit rounded bg-teal-100 px-4 py-2 font-bold text-slate-700 hover:bg-teal-300"
+				class="w-fit rounded bg-primary px-4 py-2 font-bold text-dark hover:bg-accent"
 				onclick={async () => {
 					await compileWat(code);
 				}}

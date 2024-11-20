@@ -65,28 +65,22 @@ fn add<T>(x: T, y: T) -> T {
 </script>
 
 <Header></Header>
-<div class="p-12">
+<div class="p-4 md:p-12">
 	<Center>
 		<Squeeze>
-			<div class="flex flex-col gap-12">
+			<div class="flex flex-col gap-4 md:gap-12">
 				<div>
-					<h1 class="whitespace-pre text-slate-100">A Fast, Principled, and Web-First Language.</h1>
-
-					<p
-						class="
-					mt-4
-					w-1/2
-					text-lg
-					text-slate-300
-				"
-					>
+					<h1 class="text-4xl text-light md:text-7xl">
+						A Fast, Principled, and Web-First Language.
+					</h1>
+					<p class="mt-4 w-1/2 text-lg text-medium-light">
 						Bird is a fast, principled, and web-first language. It is designed to be compiled to
 						WebAssembly and run in the browser. Bird is a statically typed language with a focus on
 						simplicity and performance.
 					</p>
 				</div>
 
-				<div class="flex w-full gap-12">
+				<div class="grid grid-cols-1 gap-6 md:grid-cols-2">
 					{#each examples as example}
 						<Card title={example.title} subtitle={example.subtitle}>
 							<Code code={example.code}></Code>
@@ -94,7 +88,7 @@ fn add<T>(x: T, y: T) -> T {
 					{/each}
 				</div>
 
-				<h1 class="text-center text-slate-100">Try out Bird!</h1>
+				<h1 class="text-center text-light">Try out Bird!</h1>
 				<div class="flex flex-col gap-4">
 					<FileUpload></FileUpload>
 					<MyCodeMirror></MyCodeMirror>
