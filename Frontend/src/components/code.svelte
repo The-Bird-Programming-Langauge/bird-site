@@ -2,7 +2,7 @@
 	export let code = '';
 </script>
 
-<code class="text-slate-200">
+<code class="text-medium-light">
 	<pre>
     {code}
     </pre>

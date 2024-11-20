@@ -2,6 +2,15 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
+:root {
+    --dark: #333;
+    --medium-light: #cbd5e1;
+    --light: #f1f5f9; 
+
+    --primary: #ccfbf1;
+    --accent: #98c1d9;
+}
+
 * {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     background-color: #333;
