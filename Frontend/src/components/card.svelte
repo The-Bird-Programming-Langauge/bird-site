@@ -3,9 +3,9 @@
 	export let subtitle = 'Subtitle';
 </script>
 
-<div class="overflow-scroll rounded-md border border-primary p-6">
+<div class="border-primary rounded-md border p-6">
 	<h2 class="font-bold">{title}</h2>
-	<p class="mb-2 text-sm text-medium-light">{subtitle}</p>
+	<p class="text-medium-light mb-2 text-sm">{subtitle}</p>
 
 	<hr />
 

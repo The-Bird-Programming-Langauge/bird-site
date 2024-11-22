@@ -6,7 +6,7 @@
 	import MyCodeMirror from '../components/my-code-mirror.svelte';
 	import Center from '../components/center.svelte';
 	import Squeeze from '../components/squeeze.svelte';
-	import type { Unsubscriber, Writable } from 'svelte/store';
+	import type { Unsubscriber } from 'svelte/store';
 	import Card from '../components/card.svelte';
 	import Code from '../components/code.svelte';
 
@@ -86,7 +86,7 @@ fn add<T>(x: T, y: T) -> T {
 					</p>
 				</div>
 
-				<div class="flex w-full gap-12">
+				<div class="grid grid-cols-2 gap-6">
 					{#each examples as example}
 						<Card title={example.title} subtitle={example.subtitle}>
 							<Code code={example.code}></Code>
