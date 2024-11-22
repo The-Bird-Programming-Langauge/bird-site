@@ -10,7 +10,7 @@ app.use(express.json());
 
 const PORT = 5174;
 
-app.post('/compile-bird', (req, res) => {
+app.post('/compile-bird', (req, res, next) => {
     const code = req.body.code;
 
     fs.writeFileSync('temp.bird', code, (err) => {
@@ -21,9 +21,14 @@ app.post('/compile-bird', (req, res) => {
     });
 
     exec('./compiler temp.bird', (err, stdout, stderr) => {
-        console.log(err);
-        console.log(stdout);
-        console.log(stderr);
+        console.log("stderr: ", err);
+        if (stderr || err) {
+            res.status(500).send(stdout);
+            return;
+        }
+
+        console.log("stdout: ", stdout);
+        console.log("stderr: ", stderr);
 
         const buffer = fs.readFileSync('output.wasm');
 

@@ -4,7 +4,6 @@ import { textEditorCode } from './text-editor-code';
 
 
 export async function compileBird(code: string) {
-    console.log("foo");
     const response = await fetch(`http://localhost:5174/compile-bird`, {
         headers: {
             "Content-Type": "application/json"
@@ -12,10 +11,14 @@ export async function compileBird(code: string) {
         method: 'POST',
         body: JSON.stringify({ code })
     });
-    console.log("response", response);
+
+    if (response.status === 500) {
+        const text = await response.text();
+        consoleOutput.update((old) => [...old, text]);
+        return;
+    }
 
     const buffer = await response.arrayBuffer();
-    console.log("buffer", buffer);
 
     compileWasm(buffer);
 }

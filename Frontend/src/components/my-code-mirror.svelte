@@ -58,7 +58,7 @@
 			}}
 		/>
 		<div
-			class="border-primary m-0 flex h-24 flex-grow flex-col overflow-auto rounded-b-[0.5rem] border-2 p-4"
+			class="border-primary m-0 flex h-48 flex-grow flex-col overflow-auto rounded-b-[0.5rem] border-2 p-4"
 			id="console"
 		>
 			{#each output as line}
