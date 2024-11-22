@@ -1,44 +1,4 @@
 
 
-
-(module
- (type $none_=>_none (func))
- (type $i32_=>_none (func (param i32)))
- (import "env" "print" (func $print (param i32)))
- (export "main" (func $main))
- (func $main
-  (local $0 i32)
-  (block $EXIT
-   (local.set $0
-    (i32.const 0)
-   )
-   (loop $LOOP
-    (block $for_body
-     (block $BODY
-      (block
-       (br $BODY)
-      )
-     )
-     (local.set $0
-      (i32.add
-       (local.get $0)
-       (i32.const 1)
-      )
-     )
-     (br_if $LOOP
-      (i32.le_s
-       (local.get $0)
-       (i32.const 5)
-      )
-     )
-    )
-   )
-  )
- )
-)
-
-
-
-
-
+print 3;
 

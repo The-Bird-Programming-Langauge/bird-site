@@ -6,7 +6,7 @@
 	import MyCodeMirror from '../components/my-code-mirror.svelte';
 	import Center from '../components/center.svelte';
 	import Squeeze from '../components/squeeze.svelte';
-	import type { Unsubscriber, Writable } from 'svelte/store';
+	import type { Unsubscriber } from 'svelte/store';
 	import Card from '../components/card.svelte';
 	import Code from '../components/code.svelte';
 

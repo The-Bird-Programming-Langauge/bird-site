@@ -63,6 +63,12 @@ export async function compileWasm(buffer: ArrayBuffer) {
     }
 }
 
+export async function uploadBird(code: string) {
+    textEditorCode.update(() => code);
+
+    compileBird(code);
+}
+
 export async function uploadWasm(code: Uint8Array | ArrayBuffer) {
     try {
         const wabtInterface = await wabt();

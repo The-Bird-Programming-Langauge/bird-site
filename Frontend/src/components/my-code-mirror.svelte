@@ -5,8 +5,8 @@
 	import { compileBird, compileWat } from '$lib/compile';
 	import type { Unsubscriber } from 'svelte/store';
 	import { consoleOutput } from '$lib/console-output';
+	import { currentLanguage } from '$lib/current-language';
 
-	let codeType = 'bird';
 	let code = '';
 	const sub = textEditorCode.subscribe((value) => {
 		code = value || '\n\n\n\n\n\n\n\n\n\n';
@@ -25,12 +25,21 @@
 		});
 	});
 
+	let codeType: 'bird' | 'wasm' = 'bird';
+	const sub3 = currentLanguage.subscribe((value) => {
+		codeType = value;
+	});
+
 	onDestroy(() => {
 		if (sub) {
 			sub();
 		}
 		if (sub2) {
 			sub2();
+		}
+
+		if (sub3) {
+			sub3();
 		}
 	});
 
@@ -67,7 +76,9 @@
 						currentTarget: EventTarget & HTMLSelectElement;
 					}
 				) => {
-					codeType = ev.currentTarget.value;
+					if (ev.currentTarget.value === 'bird' || ev.currentTarget.value === 'wasm') {
+						currentLanguage.set(ev.currentTarget.value);
+					}
 				}}
 			>
 				<option value="bird">Bird</option>
