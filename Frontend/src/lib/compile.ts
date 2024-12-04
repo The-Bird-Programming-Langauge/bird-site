@@ -4,13 +4,13 @@ import { textEditorCode } from './text-editor-code';
 
 const moduleOptions = {
     env: {
-        print_i32: (value: any) => {
+        print_i32: (value: number) => {
             console.log(value);
-            consoleOutput.update((old) => [...old, value]);
+            consoleOutput.update((old) => [...old, String(value)]);
         },
-        print_f64: (value: any) => {
+        print_f64: (value: number) => {
             console.log(value);
-            consoleOutput.update((old) => [...old, value]);
+            consoleOutput.update((old) => [...old, String(value)]);
         }
     }
 };
@@ -27,6 +27,7 @@ export async function compileBird(code: string) {
 
     if (response.status === 500) {
         const text = await response.text();
+        console.log("TEXT RESPONSE", text.split("\n"));
         consoleOutput.update((old) => [...old, text]);
         return;
     }
@@ -44,7 +45,7 @@ export async function compileWat(code: string) {
         const module = await WebAssembly.compile(buffer);
         const instance = new WebAssembly.Instance(module, moduleOptions);
 
-        (instance.exports.main as Function)();
+        (instance.exports.main as () => void)();
     } catch (e) {
         consoleOutput.update((old) =>
             [...old, `${e}`]
@@ -57,7 +58,7 @@ export async function compileWasm(buffer: ArrayBuffer) {
         const module = await WebAssembly.compile(buffer);
         const instance = new WebAssembly.Instance(module, moduleOptions);
 
-        (instance.exports.main as Function)();
+        (instance.exports.main as () => void)();
     } catch (e) {
         consoleOutput.update((old) =>
             [...old, `${e}`]
@@ -80,7 +81,7 @@ export async function uploadWasm(code: Uint8Array | ArrayBuffer) {
         const module = await WebAssembly.compile(code);
         const instance = new WebAssembly.Instance(module, moduleOptions);
 
-        (instance.exports.main as Function)();
+        (instance.exports.main as () => void)();
     } catch (e) {
         console.log(e);
         consoleOutput.update((old) =>

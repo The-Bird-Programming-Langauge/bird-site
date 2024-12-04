@@ -21,14 +21,11 @@ app.post('/compile-bird', (req, res, next) => {
     });
 
     exec('./compiler temp.bird', (err, stdout, stderr) => {
-        console.log("stderr: ", err);
         if (stderr || err) {
             res.status(500).send(stdout);
             return;
         }
 
-        console.log("stdout: ", stdout);
-        console.log("stderr: ", stderr);
 
         const buffer = fs.readFileSync('output.wasm');
 

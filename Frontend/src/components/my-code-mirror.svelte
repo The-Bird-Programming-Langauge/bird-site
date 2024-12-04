@@ -6,6 +6,7 @@
 	import type { Unsubscriber } from 'svelte/store';
 	import { consoleOutput } from '$lib/console-output';
 	import { currentLanguage } from '$lib/current-language';
+	import { Button, Select } from 'flowbite-svelte';
 
 	let code = '';
 	const sub = textEditorCode.subscribe((value) => {
@@ -62,15 +63,19 @@
 			id="console"
 		>
 			{#each output as line}
-				<p>{line}</p>
+				<p class="whitespace-pre">{line}</p>
 			{/each}
 		</div>
 	</div>
 	<div class="flex w-full justify-between gap-2">
 		<div class="flex gap-4">
-			<select
+			<Select
+				items={[
+					{ value: 'bird', name: 'Bird' },
+					{ value: 'wasm', name: 'WebAssembly' }
+				]}
 				bind:value={codeType}
-				class="text-light rounded-md"
+				class="rounded-md"
 				onchange={(
 					ev: Event & {
 						currentTarget: EventTarget & HTMLSelectElement;
@@ -80,12 +85,14 @@
 						currentLanguage.set(ev.currentTarget.value);
 					}
 				}}
-			>
-				<option value="bird">Bird</option>
-				<option value="wasm">WebAssembly</option>
-			</select>
-			<select
-				class="text-light rounded-md"
+			></Select>
+			<Select
+				class="rounded-md"
+				items={[
+					{ value: 'helloWorld', name: 'Hello, World!' },
+					{ value: 'fibonacci', name: 'Fibonacci' },
+					{ value: 'factorial', name: 'Factorial' }
+				]}
 				onchange={(
 					ev: Event & {
 						currentTarget: EventTarget & HTMLSelectElement;
@@ -120,24 +127,20 @@ fn factorial(n: int) -> int {
 						default:
 					}
 				}}
-			>
-				<option value="helloWorld">Hello World</option>
-				<option value="fibonacci">Fibonacci</option>
-				<option value="factorial">Factorial</option>
-			</select>
+			></Select>
 		</div>
 		<div class="flex gap-2">
-			<button
-				class="w-fit rounded bg-teal-100 px-4 py-2 font-bold text-slate-700 hover:bg-teal-300"
+			<Button
+				class="w-fit rounded px-4 py-2 font-bold"
 				onclick={() => {
 					consoleOutput.set([]);
 				}}
 			>
 				Clear
-			</button>
-			<button
+			</Button>
+			<Button
 				type="submit"
-				class="w-fit rounded bg-teal-100 px-4 py-2 font-bold text-slate-700 hover:bg-teal-300"
+				class="w-fit rounded px-4 py-2 font-bold"
 				onclick={async () => {
 					if (codeType === 'bird') {
 						await compileBird(code);
@@ -147,7 +150,7 @@ fn factorial(n: int) -> int {
 				}}
 			>
 				Run
-			</button>
+			</Button>
 		</div>
 	</div>
 </div>

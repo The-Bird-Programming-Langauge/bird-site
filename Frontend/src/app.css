@@ -2,18 +2,8 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
-:root {
-    --dark: #333;
-    --medium-light: #cbd5e1;
-    --light: #f1f5f9; 
-
-    --primary: #ccfbf1;
-    --accent: #98c1d9;
-}
-
 * {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
-    background-color: #333;
 }
 
 div {
@@ -23,48 +13,29 @@ div {
 
 h1 {
     font-size: 3rem;
-    color: #f4f4f4;
 }
 
 h2 {
     font-size: 2rem;
-    color: #f4f4f4;
 }
 
 h3 {
     font-size: 1.5rem;
-    color: #f4f4f4;
-
 }
 
 h4 {
     font-size: 1.2rem;
-    color: #f4f4f4;
 }
 
 h5 {
     font-size: 1rem;
-    color: #f4f4f4;
 }
 
 h6 {
     font-size: 0.8rem;
-    color: #f4f4f4;
 }
 
 p {
     font-size: 1rem;
-    color: #f4f4f4;
 }
 
-a {
-    color: #f4f4f4;
-}
-
-textarea {
-    color: #f4f4f4;
-}
-
-input {
-    color: #f4f4f4;
-}

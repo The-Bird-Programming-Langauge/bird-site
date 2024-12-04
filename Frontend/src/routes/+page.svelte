@@ -7,8 +7,9 @@
 	import Center from '../components/center.svelte';
 	import Squeeze from '../components/squeeze.svelte';
 	import type { Unsubscriber } from 'svelte/store';
-	import Card from '../components/card.svelte';
+	// import Card from '../components/card.svelte';
 	import Code from '../components/code.svelte';
+	import { Card } from 'flowbite-svelte';
 
 	let output: string[] = [];
 
@@ -70,31 +71,25 @@ fn add<T>(x: T, y: T) -> T {
 		<Squeeze>
 			<div class="flex flex-col gap-12">
 				<div>
-					<h1 class="whitespace-pre text-slate-100">A Fast, Principled, and Web-First Language.</h1>
-
-					<p
-						class="
-					mt-4
-					w-1/2
-					text-lg
-					text-slate-300
-				"
-					>
+					<h1>A Fast, Principled, and Web-First Language.</h1>
+					<p class="mt-4 self-end text-lg">
 						Bird is a fast, principled, and web-first language. It is designed to be compiled to
 						WebAssembly and run in the browser. Bird is a statically typed language with a focus on
 						simplicity and performance.
 					</p>
 				</div>
 
-				<div class="grid grid-cols-2 gap-6">
+				<div class="grid grid-cols-2 gap-2">
 					{#each examples as example}
-						<Card title={example.title} subtitle={example.subtitle}>
+						<Card class="w-full overflow-scroll">
+							<h2>{example.title}</h2>
+							<p>{example.subtitle}</p>
 							<Code code={example.code}></Code>
 						</Card>
 					{/each}
 				</div>
 
-				<h1 class="text-center text-slate-100">Try out Bird!</h1>
+				<h1 class="text-center">Try out Bird!</h1>
 				<div class="flex flex-col gap-4">
 					<FileUpload></FileUpload>
 					<MyCodeMirror></MyCodeMirror>
