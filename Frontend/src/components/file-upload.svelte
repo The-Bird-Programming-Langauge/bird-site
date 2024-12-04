@@ -1,9 +1,11 @@
 <script lang="ts">
-	import { compileBird, uploadBird, uploadWasm } from '../lib/compile';
 	import { currentLanguage } from '$lib/current-language';
 	import { onDestroy } from 'svelte';
-	import { text } from '@sveltejs/kit';
-	let files: FileList | null = $state(null);
+	import { uploadBird, uploadWasm } from '../lib/compile';
+	import { Button } from 'flowbite-svelte';
+	import { Fileupload } from 'flowbite-svelte';
+
+	let files: FileList | undefined = $state(undefined);
 
 	let codeType: 'bird' | 'wasm' = $state('bird');
 	const sub = currentLanguage.subscribe((value) => {
@@ -13,15 +15,17 @@
 	onDestroy(sub);
 </script>
 
-<div class="self-end">
-	{#if codeType === 'bird'}
-		<input bind:files type="file" id="file" accept=".bird" />
-	{:else}
-		<input bind:files type="file" id="file" accept=".wasm" />
-	{/if}
-	<button
+<div class="flex gap-2 self-end">
+	<div>
+		{#if codeType === 'bird'}
+			<Fileupload bind:files type="file" id="file" accept=".bird" />
+		{:else}
+			<Fileupload bind:files type="file" id="file" accept=".wasm" />
+		{/if}
+	</div>
+	<Button
 		type="submit"
-		class="rounded bg-teal-100 px-4 py-2 font-bold text-slate-700 hover:bg-teal-300"
+		class="rounded px-4 py-2 font-bold"
 		onclick={async () => {
 			if (!files) return;
 			if (files.length === 0) return;
@@ -37,5 +41,5 @@
 		}}
 	>
 		Upload & Run
-	</button>
+	</Button>
 </div>

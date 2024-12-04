@@ -2,8 +2,6 @@
 	export let code = '';
 </script>
 
-<code class="text-medium-light">
-	<pre>
-    {code}
-    </pre>
+<code class="whitespace-pre">
+	{code}
 </code>
