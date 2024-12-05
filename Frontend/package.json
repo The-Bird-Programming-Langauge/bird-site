@@ -36,6 +36,7 @@
 		"vite": "^5.0.3"
 	},
 	"dependencies": {
+		"@codemirror/theme-one-dark": "^6.1.2",
 		"bird-site": "file:",
 		"bird-site-frontend": "file:",
 		"code-prettify": "^0.1.0",

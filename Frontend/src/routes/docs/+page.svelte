@@ -1,5 +1,6 @@
 <script lang="ts">
-	import * as moo from 'moo';
+	import { getCode } from '$lib/getCode';
+	import { lex } from '$lib/lex';
 	import DocsBullet1 from '../../components/docs/DocsBullet1.svelte';
 	import DocsCode from '../../components/docs/DocsCode.svelte';
 	import DocsHeader1 from '../../components/docs/DocsHeader1.svelte';
@@ -10,8 +11,6 @@
 	import DocsText from '../../components/docs/DocsText.svelte';
 	import Header from '../../components/header.svelte';
 	import Section from '../../components/section.svelte';
-	import { getCode } from '$lib/getCode';
-	import { lex } from '$lib/lex';
 
 	type DocSectionProps = {
 		text: string;

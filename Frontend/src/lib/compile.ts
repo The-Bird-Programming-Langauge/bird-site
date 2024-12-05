@@ -1,6 +1,7 @@
 import wabt from 'wabt';
 import { consoleOutput } from './console-output';
 import { textEditorCode } from './text-editor-code';
+import { currentCompiledWat } from './current-compiled-wat';
 
 const moduleOptions = {
     env: {
@@ -55,6 +56,12 @@ export async function compileWat(code: string) {
 
 export async function compileWasm(buffer: ArrayBuffer) {
     try {
+        const wabtInterface = await wabt();
+        const mod = wabtInterface.readWasm(new Uint8Array(buffer), { readDebugNames: true });
+        const text = mod.toText({ foldExprs: true, inlineExport: true });
+
+        currentCompiledWat.set(text);
+
         const module = await WebAssembly.compile(buffer);
         const instance = new WebAssembly.Instance(module, moduleOptions);
 
