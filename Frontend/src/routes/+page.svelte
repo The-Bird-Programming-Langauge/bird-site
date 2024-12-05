@@ -64,7 +64,9 @@
 <Section color="yellow">
 	<div class="flex flex-col gap-12">
 		<div class="p-24">
-			<h1 class="font-bold">A Fast, Principled, and Web-First Language.</h1>
+			<h1 class="font-bold">
+				A Fast, Principled, and <span class="underline">Web-First</span> Language.
+			</h1>
 			<p class="mt-4 self-end text-2xl">
 				Bird is a fast, principled, and web-first language. It is designed to be compiled to
 				WebAssembly and run in the browser. Bird is a statically typed language with a focus on

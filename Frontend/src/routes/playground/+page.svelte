@@ -23,7 +23,7 @@
 				class="col-span-2 *:h-full"
 				styles={{
 					div: {
-						'font-size': '1.5rem'
+						'font-size': '1rem'
 					}
 				}}
 			></CodeMirror>
