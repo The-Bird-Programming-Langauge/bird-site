@@ -8,7 +8,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const PORT = 5174;
+const PORT = 5172;
 
 app.post('/compile-bird', (req, res, next) => {
     const code = req.body.code;
@@ -21,6 +21,7 @@ app.post('/compile-bird', (req, res, next) => {
     });
 
     exec('./compiler temp.bird', (err, stdout, stderr) => {
+        console.log({ err, stderr, stdout });
         if (stderr || err) {
             res.status(500).send(stdout);
             return;
@@ -29,7 +30,7 @@ app.post('/compile-bird', (req, res, next) => {
 
         const buffer = fs.readFileSync('output.wasm');
 
-        res.type('application/octet-stream'); 
+        res.type('application/octet-stream');
         res.send(buffer);
     });
 });

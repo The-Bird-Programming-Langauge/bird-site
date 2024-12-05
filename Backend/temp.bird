@@ -1,20 +1,48 @@
 
 
+print "hello world";
 
-fn add(x: int, y: int) -> int {
-        return x + y;
+fn fib(x: int) -> int {
+        if x <= 1 {
+                return x;
+        }
+
+        return fib(x - 1) + fib(x - 2);
 }
 
 
-print(add(2, 3));
+print(fib(1));
 
 
-type MyInt = int;
+type number = int;
 
 
-fn myIntAdd(x: MyInt, y: MyInt) -> MyInt {
+fn numAdd(x: number, y: number) -> number {
         return x + y;
 }
 
-print(myIntAdd(23, 432));
+print("the result of numAdd is: ");
+print(numAdd(69, 420));
+
+
+
+fn double(x: int) -> int {
+        return x * 2;
+}
+
+fn quadruple(x: int) -> int {
+        return double(double(x));
+}
+
+
+print("the double of 4 is: ");
+print(double(4));
+
+print("the quadruple of 4 is: ");
+print(quadruple(4));
+
+
+
+
+
 

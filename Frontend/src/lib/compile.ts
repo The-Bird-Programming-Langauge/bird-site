@@ -3,6 +3,7 @@ import { consoleOutput } from './console-output';
 import { textEditorCode } from './text-editor-code';
 import { currentCompiledWat } from './current-compiled-wat';
 
+let globalInstance: WebAssembly.Instance;
 const moduleOptions = {
     env: {
         print_i32: (value: number) => {
@@ -12,13 +13,23 @@ const moduleOptions = {
         print_f64: (value: number) => {
             console.log(value);
             consoleOutput.update((old) => [...old, String(value)]);
+        },
+        print_str: (ptr: number) => {
+            const buffer = new Uint8Array(globalInstance.exports.memory.buffer);
+            let str = "";
+            for (let i = ptr; buffer[i] !== 0; i++) {
+                str += String.fromCharCode(buffer[i]);
+            }
+            console.log(str);
+            consoleOutput.update((old) => [...old, str]);
+
         }
     }
 };
 
 
 export async function compileBird(code: string) {
-    const response = await fetch(`http://localhost:5174/compile-bird`, {
+    const response = await fetch(`http://localhost:5172/compile-bird`, {
         headers: {
             "Content-Type": "application/json"
         },
@@ -45,6 +56,7 @@ export async function compileWat(code: string) {
         const buffer = mod.toBinary({ log: true }).buffer;
         const module = await WebAssembly.compile(buffer);
         const instance = new WebAssembly.Instance(module, moduleOptions);
+        globalInstance = instance;
 
         (instance.exports.main as () => void)();
     } catch (e) {
@@ -64,6 +76,7 @@ export async function compileWasm(buffer: ArrayBuffer) {
 
         const module = await WebAssembly.compile(buffer);
         const instance = new WebAssembly.Instance(module, moduleOptions);
+        globalInstance = instance;
 
         (instance.exports.main as () => void)();
     } catch (e) {
@@ -87,6 +100,7 @@ export async function uploadWasm(code: Uint8Array | ArrayBuffer) {
 
         const module = await WebAssembly.compile(code);
         const instance = new WebAssembly.Instance(module, moduleOptions);
+        globalInstance = instance;
 
         (instance.exports.main as () => void)();
     } catch (e) {
