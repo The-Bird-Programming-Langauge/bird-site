@@ -2,6 +2,6 @@
     export let id = "";
 </script>
 
-<pre id={id} class="inline-block mt-6 bg-[#171717] text-gray-300 py-6 shadow-[10px_10px_0_0_black] w-full">
+<code id={id} class="inline-block mt-6 mb-5 p-6 text-gray-100 bg-[#212121] shadow-[10px_10px_0_0_black] w-full whitespace-pre-line text-[16px]" style="font-family: monospace;">
     <slot></slot>
-</pre>
+</code>
