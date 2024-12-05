@@ -16,6 +16,7 @@
 		"@sveltejs/kit": "^2.0.0",
 		"@sveltejs/vite-plugin-svelte": "^4.0.0",
 		"@types/eslint": "^9.6.0",
+		"@types/moo": "^0.5.9",
 		"autoprefixer": "^10.4.20",
 		"eslint": "^9.7.0",
 		"eslint-config-prettier": "^9.1.0",
@@ -37,7 +38,9 @@
 	"dependencies": {
 		"bird-site": "file:",
 		"bird-site-frontend": "file:",
+		"code-prettify": "^0.1.0",
 		"codemirror": "^6.0.1",
+		"moo": "^0.5.2",
 		"svelte-codemirror-editor": "^1.4.1",
 		"wabt": "1.0.36-nightly.20241112"
 	}

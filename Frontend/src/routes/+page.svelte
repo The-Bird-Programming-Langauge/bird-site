@@ -7,6 +7,8 @@
 	import MyCodeMirror from '../components/my-code-mirror.svelte';
 	import DocsCode from '../components/docs/DocsCode.svelte';
 	import Section from '../components/section.svelte';
+	import { getCode } from '$lib/getCode';
+	import { lex } from '$lib/lex';
 
 	let output: string[] = [];
 
@@ -33,35 +35,19 @@
 			title: 'Familiar Syntax',
 			subtitle:
 				'Bird has a familiar syntax that is easy to read and write.  You can write Bird code in any text editor and compile it to WebAssembly.',
-			code: `
-fn add(x: int, y: int) -> int {
-  return x + y;
-}
-		`
+			path: 'familiarSyntax'
 		},
 		{
 			title: 'Modern Features',
 			subtitle:
 				'Bird has modern features like pattern matching, generics, and type inference. Bird is designed to be a modern language that is easy to use and powerful.',
-			code: `
-fn fib(n: int) -> int {
-	return match n {
-		0 => 0,
-		1 => 1,
-		else => fib(n - 1) + fib(n - 2),
-	}
-}
-	`
+			path: 'modernFeatures'
 		},
 		{
 			title: 'Expressive Types',
 			subtitle:
 				'Bird has expressive types that make it easy to write safe and efficient code. Bird is a statically typed language that is designed to catch errors at compile time.',
-			code: `
-fn add<T>(x: T, y: T) -> T {	
-	return x + y;
-}
-		`
+			path: 'expressiveTypes'
 		}
 	];
 </script>
@@ -88,7 +74,11 @@ fn add<T>(x: T, y: T) -> T {
 						<h2 class="font-bold text-black">{example.title}</h2>
 						<p class="text-2xl">{example.subtitle}</p>
 					</div>
-					<DocsCode>{example.code}</DocsCode>
+					<DocsCode>
+						{#await getCode(example.path) then code}
+							{@html lex(code)}
+						{/await}
+					</DocsCode>
 				</div>
 			{/each}
 		</div>

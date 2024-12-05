@@ -1,6 +1,5 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
-	import BirdButton from '../../components/BirdButton.svelte';
+	import * as moo from 'moo';
 	import DocsBullet1 from '../../components/docs/DocsBullet1.svelte';
 	import DocsCode from '../../components/docs/DocsCode.svelte';
 	import DocsHeader1 from '../../components/docs/DocsHeader1.svelte';
@@ -11,6 +10,8 @@
 	import DocsText from '../../components/docs/DocsText.svelte';
 	import Header from '../../components/header.svelte';
 	import Section from '../../components/section.svelte';
+	import { getCode } from '$lib/getCode';
+	import { lex } from '$lib/lex';
 
 	type DocSectionProps = {
 		text: string;
@@ -41,11 +42,6 @@
 		},
 		{ text: 'Functions' }
 	];
-
-	async function getCode(name: string) {
-		const response = await fetch(`./${name}.bird`);
-		return response.ok ? await response.text() : 'Error fetching code';
-	}
 </script>
 
 <Header></Header>
@@ -74,7 +70,7 @@
 		>
 		<DocsCode>
 			{#await getCode('singleLineComment') then code}
-				{code}
+				{@html lex(code)}
 			{/await}
 		</DocsCode>
 	</DocsSection>
@@ -86,7 +82,7 @@
 		>
 		<DocsCode>
 			{#await getCode('multiLineComment') then code}
-				{code}
+				{@html lex(code)}
 			{/await}
 		</DocsCode>
 	</DocsSection>
@@ -105,7 +101,7 @@
 		<DocsText>Use the var keyword to create a normal mutable variable.</DocsText>
 		<DocsCode>
 			{#await getCode('normalVariables') then code}
-				{code}
+				{@html lex(code)}
 			{/await}
 		</DocsCode>
 	</DocsSection>
@@ -116,7 +112,7 @@
 		>
 		<DocsCode>
 			{#await getCode('immutableVariables') then code}
-				{code}
+				{@html lex(code)}
 			{/await}
 		</DocsCode>
 	</DocsSection>
@@ -129,7 +125,7 @@
 		<DocsText>An already declared variable can be overwritten using the = operator.</DocsText>
 		<DocsCode>
 			{#await getCode('basicAssignment') then code}
-				{code}
+				{@html lex(code)}
 			{/await}
 		</DocsCode>
 	</DocsSection>
@@ -145,7 +141,7 @@
 		</DocsText>
 		<DocsCode>
 			{#await getCode('assignmentOperators') then code}
-				{code}
+				{@html lex(code)}
 			{/await}
 		</DocsCode>
 	</DocsSection>
@@ -158,7 +154,7 @@
 	</DocsSection>
 	<DocsCode>
 		{#await getCode('assignmentWithinExpressions') then code}
-			{code}
+			{@html lex(code)}
 		{/await}
 	</DocsCode>
 </Section>
@@ -173,14 +169,14 @@
 	</DocsText>
 	<DocsCode>
 		{#await getCode('primitiveTypes') then code}
-			{code}
+			{@html lex(code)}
 		{/await}
 	</DocsCode>
 	<DocsHeader3>Type Declaration</DocsHeader3>
 	<DocsText>You can create a type identifier to represent a primitive type.</DocsText>
 	<DocsCode>
 		{#await getCode('typeDeclaration') then code}
-			{code}
+			{@html lex(code)}
 		{/await}
 	</DocsCode>
 </Section>
