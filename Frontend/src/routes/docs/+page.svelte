@@ -150,34 +150,38 @@
 			>Assignments can be integrated into expressions to modify a variable and return its updated
 			value.
 		</DocsText>
+		<DocsCode>
+			{#await getCode('assignmentWithinExpressions') then code}
+				{@html lex(code)}
+			{/await}
+		</DocsCode>
 	</DocsSection>
-	<DocsCode>
-		{#await getCode('assignmentWithinExpressions') then code}
-			{@html lex(code)}
-		{/await}
-	</DocsCode>
 </Section>
 <Section>
 	<DocsHeader1 id="types">Types</DocsHeader1>
-	<DocsHeader3>Primitive Types</DocsHeader3>
-	<DocsText
-		>Bird supports the following primitive types:
-		<DocsInlineCode>int</DocsInlineCode>,
-		<DocsInlineCode>bool</DocsInlineCode>,
-		<DocsInlineCode>float</DocsInlineCode>.
-	</DocsText>
-	<DocsCode>
-		{#await getCode('primitiveTypes') then code}
-			{@html lex(code)}
-		{/await}
-	</DocsCode>
-	<DocsHeader3>Type Declaration</DocsHeader3>
-	<DocsText>You can create a type identifier to represent a primitive type.</DocsText>
-	<DocsCode>
-		{#await getCode('typeDeclaration') then code}
-			{@html lex(code)}
-		{/await}
-	</DocsCode>
+	<DocsSection>
+		<DocsHeader3>Primitive Types</DocsHeader3>
+		<DocsText
+			>Bird supports the following primitive types:
+			<DocsInlineCode>int</DocsInlineCode>,
+			<DocsInlineCode>bool</DocsInlineCode>,
+			<DocsInlineCode>float</DocsInlineCode>.
+		</DocsText>
+		<DocsCode>
+			{#await getCode('primitiveTypes') then code}
+				{@html lex(code)}
+			{/await}
+		</DocsCode>
+	</DocsSection>
+	<DocsSection>
+		<DocsHeader3>Type Declaration</DocsHeader3>
+		<DocsText>You can create a type identifier to represent a primitive type.</DocsText>
+		<DocsCode>
+			{#await getCode('typeDeclaration') then code}
+				{@html lex(code)}
+			{/await}
+		</DocsCode>
+	</DocsSection>
 </Section>
 
 <Section color="none">

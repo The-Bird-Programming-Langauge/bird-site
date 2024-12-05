@@ -13,7 +13,7 @@
 		</Center>
 	</div>
 {:else if color === 'yellow'}
-	<div class="bg-orange-300 p-12">
+	<div class="bg-orange-400 p-12">
 		<Center>
 			<Squeeze>
 				<slot></slot>

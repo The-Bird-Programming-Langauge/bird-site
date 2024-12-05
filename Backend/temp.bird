@@ -1,7 +1,20 @@
 
 
+
 fn add(x: int, y: int) -> int {
         return x + y;
 }
 
-print add(1, 4);
+
+print(add(2, 3));
+
+
+type MyInt = int;
+
+
+fn myIntAdd(x: MyInt, y: MyInt) -> MyInt {
+        return x + y;
+}
+
+print(myIntAdd(23, 432));
+

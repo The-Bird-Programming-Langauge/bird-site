@@ -63,7 +63,7 @@
 <Header></Header>
 <Section color="yellow">
 	<div class="flex flex-col gap-12">
-		<div class="p-24">
+		<div class="xl:p-24">
 			<h1 class="font-bold">
 				A Fast, Principled, and <span class="underline">Web-First</span> Language.
 			</h1>
@@ -79,7 +79,7 @@
 	<div class="flex flex-col gap-12">
 		<div class="flex flex-col gap-12">
 			{#each examples as example}
-				<div class="grid grid-cols-2 gap-12">
+				<div class="grid grid-cols-1 gap-12 xl:grid-cols-2">
 					<div>
 						<h2 class="font-bold text-black">{example.title}</h2>
 						<p class="text-2xl">{example.subtitle}</p>
@@ -96,7 +96,7 @@
 </Section>
 <Section color="none">
 	<div class="flex flex-col gap-12">
-		<div class="p-24">
+		<div class="xl:p-24">
 			<div class="mb-6">
 				<h1 class="font-bold">Bird is a Web-First Language.</h1>
 				<p class="mt-4 self-end text-2xl">
@@ -105,7 +105,7 @@
 				</p>
 			</div>
 			<div class="mb-6">
-				<h2>What is WebAssembly?</h2>
+				<h2 class="font-bold">What is WebAssembly?</h2>
 				<p class="mt-4 self-end text-2xl">
 					WebAssembly (wasm) is a new type of code that can be run in modern web browsers. It is a
 					low-level assembly-like language that is designed to be fast and efficient. WebAssembly is
@@ -120,7 +120,7 @@
 				</p>
 			</div>
 			<div class="mb-6">
-				<h2>With the power of WebAssembly!</h2>
+				<h2 class="font-bold">With the power of WebAssembly!</h2>
 				<p class="mt-4 self-end text-2xl">
 					With the power of WebAssembly, Bird can run in the browser at near-native speeds. This
 					makes it possible to write high-performance web applications in Bird that run in the

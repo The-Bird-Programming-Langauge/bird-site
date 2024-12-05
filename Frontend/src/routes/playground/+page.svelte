@@ -28,13 +28,13 @@
 				}}
 			></CodeMirror>
 			<div class="bg-color-dark h-full">
-				<Tabs contentClass="" class="" tabStyle="underline">
-					<TabItem title="Result" class="">
+				<Tabs contentClass="" tabStyle="underline">
+					<TabItem title="Result" open>
 						<div class="h-full">
 							<Terminal></Terminal>
 						</div>
 					</TabItem>
-					<TabItem open title="Compiled WebAssembly">
+					<TabItem title="Compiled WebAssembly">
 						<div class="m-0 whitespace-pre p-4">
 							<p class="text-color-on-dark text-xl">{$currentCompiledWat}</p>
 						</div>
