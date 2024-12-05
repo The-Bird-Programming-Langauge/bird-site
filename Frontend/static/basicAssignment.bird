@@ -1,0 +1,3 @@
+// Declare the variable x with value 5 and reassign x with the value 10. 
+var x: int = 5; 
+x = 10;

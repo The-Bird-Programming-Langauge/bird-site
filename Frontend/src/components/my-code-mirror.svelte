@@ -7,6 +7,7 @@
 	import { consoleOutput } from '$lib/console-output';
 	import { currentLanguage } from '$lib/current-language';
 	import { Button, Select } from 'flowbite-svelte';
+	import BirdButton from './BirdButton.svelte';
 
 	let code = '';
 	const sub = textEditorCode.subscribe((value) => {
@@ -53,14 +54,15 @@
 			bind:value={code}
 			styles={{
 				div: {
-					'background-color': 'rgb(204 251 241)',
-					color: 'color: rgb(51 65 85)'
+					'background-color': 'var(--color-dark)',
+					color: 'var(--color-on-dark)',
+					'font-size': '20px'
 				}
 			}}
 		/>
 		<div
-			class="border-primary m-0 flex h-48 flex-grow flex-col overflow-auto rounded-b-[0.5rem] border-2 p-4"
-			id="console"
+			class="bg-color-dark m-0 flex h-48 flex-grow flex-col overflow-auto border-t-2 p-4"
+			id="console "
 		>
 			{#each output as line}
 				<p class="whitespace-pre">{line}</p>
@@ -130,27 +132,16 @@ fn factorial(n: int) -> int {
 			></Select>
 		</div>
 		<div class="flex gap-2">
-			<Button
-				class="w-fit rounded px-4 py-2 font-bold"
-				onclick={() => {
-					consoleOutput.set([]);
-				}}
-			>
-				Clear
-			</Button>
-			<Button
-				type="submit"
-				class="w-fit rounded px-4 py-2 font-bold"
+			<BirdButton onclick={() => consoleOutput.set([])}>Clear</BirdButton>
+			<BirdButton
 				onclick={async () => {
 					if (codeType === 'bird') {
 						await compileBird(code);
 					} else {
 						await compileWat(code);
 					}
-				}}
+				}}>Run</BirdButton
 			>
-				Run
-			</Button>
 		</div>
 	</div>
 </div>

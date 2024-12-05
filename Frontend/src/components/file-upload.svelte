@@ -2,8 +2,8 @@
 	import { currentLanguage } from '$lib/current-language';
 	import { onDestroy } from 'svelte';
 	import { uploadBird, uploadWasm } from '../lib/compile';
-	import { Button } from 'flowbite-svelte';
 	import { Fileupload } from 'flowbite-svelte';
+	import BirdButton from './BirdButton.svelte';
 
 	let files: FileList | undefined = $state(undefined);
 
@@ -23,9 +23,8 @@
 			<Fileupload bind:files type="file" id="file" accept=".wasm" />
 		{/if}
 	</div>
-	<Button
+	<BirdButton
 		type="submit"
-		class="rounded px-4 py-2 font-bold"
 		onclick={async () => {
 			if (!files) return;
 			if (files.length === 0) return;
@@ -41,5 +40,5 @@
 		}}
 	>
 		Upload & Run
-	</Button>
+	</BirdButton>
 </div>

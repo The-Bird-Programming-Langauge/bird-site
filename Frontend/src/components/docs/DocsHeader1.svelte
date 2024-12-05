@@ -1,7 +1,7 @@
 <script>
-    export let id = "";
+	export let id = '';
 </script>
 
-<h2 id={id} class="text-black text-[28px] mt-[60px] font-bold">
-    <slot></slot>
-</h2>
+<h1 {id} class="font-bold underline decoration-yellow-300">
+	<slot></slot>
+</h1>

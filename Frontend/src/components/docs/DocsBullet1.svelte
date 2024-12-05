@@ -1,20 +1,9 @@
-<script>
-    export let text = "";
-    export let href = "";
+<script lang="ts">
+	export let text = '';
+	export let href = '';
 </script>
-  
-<li>
-    <a href={href} class="hover:cursor-pointer">{text}</a>
-    <ul class="block pl-10 text-black"><slot></slot></ul>
+
+<li class="list-disc">
+	<a {href} class="text-2xl hover:cursor-pointer">{text}</a>
+	<ul class="block pl-10 text-2xl"><slot></slot></ul>
 </li>
-
-<style>
-    a {
-        text-decoration: underline;
-        text-decoration-color: #00ffea;
-    }
-
-    ul {
-        list-style-type: circle;
-    }
-</style>

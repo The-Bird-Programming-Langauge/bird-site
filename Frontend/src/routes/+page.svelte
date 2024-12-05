@@ -1,15 +1,12 @@
 <script lang="ts">
-	import FileUpload from '../components/file-upload.svelte';
-	import Header from '../components/header.svelte';
 	import { consoleOutput } from '$lib/console-output';
 	import { onDestroy, onMount } from 'svelte';
-	import MyCodeMirror from '../components/my-code-mirror.svelte';
-	import Center from '../components/center.svelte';
-	import Squeeze from '../components/squeeze.svelte';
 	import type { Unsubscriber } from 'svelte/store';
-	// import Card from '../components/card.svelte';
-	import Code from '../components/code.svelte';
-	import { Card } from 'flowbite-svelte';
+	import FileUpload from '../components/file-upload.svelte';
+	import Header from '../components/header.svelte';
+	import MyCodeMirror from '../components/my-code-mirror.svelte';
+	import DocsCode from '../components/docs/DocsCode.svelte';
+	import Section from '../components/section.svelte';
 
 	let output: string[] = [];
 
@@ -34,7 +31,8 @@
 	let examples = [
 		{
 			title: 'Familiar Syntax',
-			subtitle: 'Simple and easy to read',
+			subtitle:
+				'Bird has a familiar syntax that is easy to read and write.  You can write Bird code in any text editor and compile it to WebAssembly.',
 			code: `
 fn add(x: int, y: int) -> int {
   return x + y;
@@ -43,7 +41,8 @@ fn add(x: int, y: int) -> int {
 		},
 		{
 			title: 'Modern Features',
-			subtitle: 'Novel and Expressive',
+			subtitle:
+				'Bird has modern features like pattern matching, generics, and type inference. Bird is designed to be a modern language that is easy to use and powerful.',
 			code: `
 fn fib(n: int) -> int {
 	return match n {
@@ -51,11 +50,13 @@ fn fib(n: int) -> int {
 		1 => 1,
 		else => fib(n - 1) + fib(n - 2),
 	}
-}`
+}
+	`
 		},
 		{
 			title: 'Expressive Types',
-			subtitle: 'Static and Strongly Typed',
+			subtitle:
+				'Bird has expressive types that make it easy to write safe and efficient code. Bird is a statically typed language that is designed to catch errors at compile time.',
 			code: `
 fn add<T>(x: T, y: T) -> T {	
 	return x + y;
@@ -66,35 +67,37 @@ fn add<T>(x: T, y: T) -> T {
 </script>
 
 <Header></Header>
-<div class="p-12">
-	<Center>
-		<Squeeze>
-			<div class="flex flex-col gap-12">
-				<div>
-					<h1>A Fast, Principled, and Web-First Language.</h1>
-					<p class="mt-4 self-end text-lg">
-						Bird is a fast, principled, and web-first language. It is designed to be compiled to
-						WebAssembly and run in the browser. Bird is a statically typed language with a focus on
-						simplicity and performance.
-					</p>
+<Section color="yellow">
+	<div class="flex flex-col gap-12">
+		<div class="p-24">
+			<h1 class="font-bold">A Fast, Principled, and Web-First Language.</h1>
+			<p class="mt-4 self-end text-2xl">
+				Bird is a fast, principled, and web-first language. It is designed to be compiled to
+				WebAssembly and run in the browser. Bird is a statically typed language with a focus on
+				simplicity and performance.
+			</p>
+		</div>
+	</div>
+</Section>
+<Section color="primary">
+	<div class="flex flex-col gap-12">
+		<div class="flex flex-col gap-12">
+			{#each examples as example}
+				<div class="grid grid-cols-2 gap-12">
+					<div>
+						<h2 class="font-bold text-black">{example.title}</h2>
+						<p class="text-2xl">{example.subtitle}</p>
+					</div>
+					<DocsCode>{example.code}</DocsCode>
 				</div>
-
-				<div class="grid grid-cols-2 gap-2">
-					{#each examples as example}
-						<Card class="w-full overflow-scroll">
-							<h2>{example.title}</h2>
-							<p>{example.subtitle}</p>
-							<Code code={example.code}></Code>
-						</Card>
-					{/each}
-				</div>
-
-				<h1 class="text-center">Try out Bird!</h1>
-				<div class="flex flex-col gap-4">
-					<FileUpload></FileUpload>
-					<MyCodeMirror></MyCodeMirror>
-				</div>
-			</div>
-		</Squeeze>
-	</Center>
-</div>
+			{/each}
+		</div>
+	</div>
+</Section>
+<Section color="none">
+	<h1 class="text-center font-bold">Try out Bird!</h1>
+	<div class="flex flex-col gap-4">
+		<FileUpload></FileUpload>
+		<MyCodeMirror></MyCodeMirror>
+	</div>
+</Section>
