@@ -2,16 +2,16 @@ import * as moo from 'moo';
 
 export function lex(birdCode: string): string {
     const lexer = moo.compile({
-        darkGreen: [/\/\/.*?$/, /\/\*[\s\S]*?\*\//],
+        gray: [/\/\/.*?$/, /\/\*[\s\S]*?\*\//],
         white: { match: [" ", "\n", "\t", "+", "-", "*", "/", "%", "=", "+=", "-=", "*=", "/=", "%=", "->", "==", "!=", ">", "<", ">=", "<=", ";", ".", ",", ":"], lineBreaks: true },
-        darkBlue: ['var', 'const', 'type', 'fn'],
-        green: ['int', 'bool', 'float'],
-        purple: ["if", "else", "while", "for", "return", "match"],
+        darkBlue: ['var', 'const', 'type', 'true', 'false', "fn"],
+        green: ['int', 'bool', 'float', 'str', 'void'],
+        purple: ["if", "else", "while", "for", "return", "match", "print"],
         orange: ['(', ')', '{', '}'],
+        orange2: [/".*?"/, /'.*?'/, /"/],
         yellow: /0|[1-9]\d*/,
         lightBlue: /[a-zA-Z_]\w*/,
     });
-
 
     lexer.reset(birdCode);
 
@@ -26,8 +26,8 @@ export function lex(birdCode: string): string {
                 returnText += token.value;
                 break;
 
-            case 'darkGreen':
-                returnText += `<code class="text-emerald-600">${token.value}</code>`;
+            case 'gray':
+                returnText += `<code class="text-gray-500">${token.value}</code>`;
                 break;
 
             case 'darkBlue':
@@ -35,7 +35,7 @@ export function lex(birdCode: string): string {
                 break;
 
             case 'lightBlue':
-                returnText += `<code class="text-sky-300">${token.value}</code>`;
+                returnText += `<code class="text-sky-400">${token.value}</code>`;
                 break;
 
             case 'yellow':
@@ -46,6 +46,7 @@ export function lex(birdCode: string): string {
                 returnText += `<code class="text-green-400">${token.value}</code>`;
                 break;
 
+            case 'orange2':
             case 'orange':
                 returnText += `<code class="text-orange-300">${token.value}</code>`;
                 break;

@@ -1,0 +1,8 @@
+fn sayName(name: str) {
+    print name;
+}
+
+// OR
+fn sayName(name: str) -> void {
+    print name;
+}
