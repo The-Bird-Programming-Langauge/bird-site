@@ -39,7 +39,42 @@
 				{ text: 'Type Declaration', href: '#type-declaration' }
 			]
 		},
-		{ text: 'Functions' }
+		{
+			text: 'Expressions',
+			href: '#expressions',
+			children: [
+				{ text: 'Arithmetic Expressions', href: '#arithmetic-expressions' },
+				{ text: 'Comparison Expressions', href: '#comparison-expressions' },
+				{ text: 'Ternary Expressions', href: '#ternary-expressions' }
+			]
+		},
+		{
+			text: 'If Statements',
+			href: '#if-statements'
+		},
+		{
+			text: 'Loops',
+			href: '#loops',
+			children: [
+				{ text: 'For Loops', href: '#for-loops' },
+				{ text: 'While Loops', href: '#while-loops' },
+				{ text: 'Continue and Break', href: '#continue-and-break' }
+			]
+		},
+		{
+			text: 'Functions',
+			href: '#functions',
+			children: [
+				{
+					text: 'Function Declaration',
+					href: '#function-declaration'
+				},
+				{
+					text: 'Function Calls',
+					href: '#function-calls'
+				}
+			]
+		}
 	];
 </script>
 
