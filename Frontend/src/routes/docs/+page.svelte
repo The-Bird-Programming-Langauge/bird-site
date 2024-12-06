@@ -9,6 +9,7 @@
 	import DocsInlineCode from '../../components/docs/DocsInlineCode.svelte';
 	import DocsSection from '../../components/docs/DocsSection.svelte';
 	import DocsText from '../../components/docs/DocsText.svelte';
+	import FunctionDocs from '../../components/docs/FunctionDocs.svelte';
 	import Header from '../../components/header.svelte';
 	import Section from '../../components/section.svelte';
 
@@ -21,7 +22,11 @@
 	const sectionProps: DocSectionProps[] = [
 		{
 			text: 'Comments',
-			href: '#comments'
+			href: '#comments',
+			children: [
+				{ text: 'Single Line Comments', href: '#single-line-comments' },
+				{ text: 'Multi-Line Comments', href: '#multi-line-comments' }
+			]
 		},
 		{
 			text: 'Variables',
@@ -96,7 +101,7 @@
 <Section>
 	<DocsHeader1 id="comments">Comments</DocsHeader1>
 	<DocsSection>
-		<DocsHeader3>Single Line Comments</DocsHeader3>
+		<DocsHeader2 id="single-line-comments">Single Line Comments</DocsHeader2>
 		<DocsText
 			>Comment out single lines using the
 			<DocsInlineCode>//</DocsInlineCode>
@@ -109,7 +114,7 @@
 		</DocsCode>
 	</DocsSection>
 	<DocsSection>
-		<DocsHeader3>Multi-Line Comments</DocsHeader3>
+		<DocsHeader2 id="multi-line-comments">Multi-Line Comments</DocsHeader2>
 		<DocsText
 			>Comment out multiple lines using the <DocsInlineCode>/*</DocsInlineCode> prefix in combination
 			with the <DocsInlineCode>*/</DocsInlineCode> suffix.</DocsText
@@ -195,7 +200,7 @@
 <Section>
 	<DocsHeader1 id="types">Types</DocsHeader1>
 	<DocsSection>
-		<DocsHeader3>Primitive Types</DocsHeader3>
+		<DocsHeader2 id="primitive-types">Primitive Types</DocsHeader2>
 		<DocsText
 			>Bird supports the following primitive types:
 			<DocsInlineCode>int</DocsInlineCode>,
@@ -209,7 +214,7 @@
 		</DocsCode>
 	</DocsSection>
 	<DocsSection>
-		<DocsHeader3>Type Declaration</DocsHeader3>
+		<DocsHeader2 id="type-declaration">Type Declaration</DocsHeader2>
 		<DocsText>You can create a type identifier to represent a primitive type.</DocsText>
 		<DocsCode>
 			{#await getCode('typeDeclaration') then code}
@@ -218,6 +223,8 @@
 		</DocsCode>
 	</DocsSection>
 </Section>
+
+<FunctionDocs></FunctionDocs>
 
 <Section color="none">
 	<div class="flex justify-center">
