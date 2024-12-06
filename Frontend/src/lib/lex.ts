@@ -3,7 +3,7 @@ import * as moo from 'moo';
 export function lex(birdCode: string): string {
     const lexer = moo.compile({
         gray: [/\/\/.*?$/, /\/\*[\s\S]*?\*\//],
-        white: { match: [" ", "\n", "\t", "+", "-", "*", "/", "%", "=", "+=", "-=", "*=", "/=", "%=", "->", "==", "!=", ">", "<", ">=", "<=", ";", ".", ",", ":"], lineBreaks: true },
+        white: { match: [" ", "\n", "\t", "+", "-", "*", "/", "%", "=", "+=", "-=", "*=", "/=", "%=", "->", "==", "!=", ">", "<", ">=", "<=", ";", ".", ",", ":", "?"], lineBreaks: true },
         darkBlue: ['var', 'const', 'type', 'true', 'false', "fn"],
         green: ['int', 'bool', 'float', 'str', 'void'],
         purple: ["if", "else", "while", "for", "return", "match", "print"],
