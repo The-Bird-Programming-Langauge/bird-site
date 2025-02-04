@@ -3,6 +3,7 @@ import { consoleOutput } from './console-output';
 import { textEditorCode } from './text-editor-code';
 import { currentCompiledWat } from './current-compiled-wat';
 
+
 let instance: WebAssembly.Instance;
 let memory: DataView<ArrayBuffer>;
 
@@ -13,14 +14,17 @@ const BLOCK_MARK_OFFSET = 8;
 const BLOCK_HEADER_SIZE = 9;
 const FREE_LIST_START = 5;
 
+const publicIp = import.meta.env.VITE_PUBLIC_IP;
+
 export async function compileBird(code: string) {
-    const response = await fetch(`http://localhost:5172/compile-bird`, {
+    const response = await fetch(`http://${publicIp}/compile-bird`, {
         headers: {
             "Content-Type": "application/json"
         },
         method: 'POST',
         body: JSON.stringify({ code })
     });
+    const buffer = await response.arrayBuffer();
 
     if (response.status === 500) {
         const text = await response.text();
@@ -28,8 +32,6 @@ export async function compileBird(code: string) {
         consoleOutput.update((old) => [...old, text]);
         return;
     }
-
-    const buffer = await response.arrayBuffer();
 
     compileWasm(buffer);
 }
