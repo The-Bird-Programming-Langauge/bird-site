@@ -1,0 +1,3 @@
+// Declare a constant variable x with an
+// automatically inferred type of int and assign it the value 2. 
+const x = 2;

@@ -1,0 +1,2 @@
+const name: str = "Dennis Ritchie";
+sayName(name); // Dennis Ritchie

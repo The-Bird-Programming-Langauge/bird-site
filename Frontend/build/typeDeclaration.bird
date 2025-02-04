@@ -1,0 +1,5 @@
+// Create type alias, number, of type int. 
+type number = int; 
+
+// Create variable x of type number with value 34.
+var x: number = 34;

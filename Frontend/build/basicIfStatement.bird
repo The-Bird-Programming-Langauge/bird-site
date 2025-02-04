@@ -1,0 +1,4 @@
+// The given input condition evaluates to true.
+if (1 == 1) {
+    print "test"; // test
+}

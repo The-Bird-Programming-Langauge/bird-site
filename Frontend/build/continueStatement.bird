@@ -1,0 +1,9 @@
+var z = 0;
+for var x: int = 0; x < 5; x += 1 do {
+    if x == 3 {
+        continue;
+    }
+    z += 1;
+}
+// z = 4. z never reaches 5 because the continue statement
+// skips to the next loop iteration.
