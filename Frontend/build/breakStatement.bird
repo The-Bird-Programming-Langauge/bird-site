@@ -1,0 +1,8 @@
+var z = 0;
+for var x: int = 0; x < 5; x += 1 do {
+    z = x;
+    if z == 2 {
+        break;
+    }
+}
+// Within the third loop iteration, the loop breaks.

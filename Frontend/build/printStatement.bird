@@ -1,0 +1,5 @@
+// Print a string.
+print "hello world";
+
+// Print an integer.
+print 42;

@@ -1,0 +1,8 @@
+var x = 2; 
+var y = 3; 
+
+x += 4; // x = 6 
+
+// Divide x by y. 
+// This is equivalent to x = x / y. 
+x /= y; // x = 2

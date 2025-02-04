@@ -1,0 +1,10 @@
+// Note that parenthesis around the condition is not required.
+var x = 1;
+if false {
+    x = 2;
+} else if true {
+    x = 3;
+} else {
+    x = 4;
+}
+// x = 3

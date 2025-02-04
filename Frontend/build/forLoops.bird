@@ -1,0 +1,4 @@
+for var x: int = 0; x < 5; x += 1 do {
+    print "hello";
+}
+// Prints hello 5 times.
