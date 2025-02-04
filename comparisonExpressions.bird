@@ -1,0 +1,3 @@
+var x = 10 > 2;
+// x = true
+// 10 is greater than 2, so true is returned.

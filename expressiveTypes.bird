@@ -1,0 +1,3 @@
+fn add<T>(x: T, y: T) -> T {	
+	return x + y;
+}
