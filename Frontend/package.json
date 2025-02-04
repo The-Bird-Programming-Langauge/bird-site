@@ -37,6 +37,7 @@
 	},
 	"dependencies": {
 		"@codemirror/theme-one-dark": "^6.1.2",
+		"@sveltejs/adapter-vercel": "^5.6.1",
 		"bird-site": "file:",
 		"bird-site-frontend": "file:",
 		"code-prettify": "^0.1.0",
