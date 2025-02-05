@@ -16,10 +16,10 @@
 	<div class="flex grow">
 		<div class="grid w-full grid-cols-3">
 			<CodeMirror
+				extensions={[oneDarkTheme]}
 				basic
 				bind:value={$textEditorCode}
 				tabSize={8}
-				extensions={[oneDarkTheme]}
 				class="col-span-2 *:h-full"
 				styles={{
 					div: {
@@ -27,14 +27,23 @@
 					}
 				}}
 			></CodeMirror>
-			<div class="bg-color-dark h-full">
+			<div class="h-full bg-slate-900">
 				<Tabs contentClass="" tabStyle="underline">
-					<TabItem title="Result" open>
+					<TabItem
+						title="Result"
+						open
+						activeClasses="p-4 text-primary-500"
+						inactiveClasses="p-4 text-gray-400"
+					>
 						<div class="h-full">
 							<Terminal></Terminal>
 						</div>
 					</TabItem>
-					<TabItem title="Compiled WebAssembly">
+					<TabItem
+						title="Compiled WebAssembly"
+						activeClasses="p-4 text-primary-500"
+						inactiveClasses="p-4 text-gray-400"
+					>
 						<div class="m-0 whitespace-pre p-4">
 							<p class="text-color-on-dark text-xl">{$currentCompiledWat}</p>
 						</div>

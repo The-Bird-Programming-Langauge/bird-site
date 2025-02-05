@@ -27,15 +27,15 @@ export function lex(birdCode: string): string {
                 break;
 
             case 'gray':
-                returnText += `<code class="text-gray-500">${token.value}</code>`;
+                returnText += `<code class="text-gray-400">${token.value}</code>`;
                 break;
 
             case 'darkBlue':
-                returnText += `<code class="text-sky-600">${token.value}</code>`;
+                returnText += `<code class="text-sky-400">${token.value}</code>`;
                 break;
 
             case 'lightBlue':
-                returnText += `<code class="text-sky-400">${token.value}</code>`;
+                returnText += `<code class="text-sky-200">${token.value}</code>`;
                 break;
 
             case 'yellow':

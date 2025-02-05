@@ -2,7 +2,7 @@
 	import { currentLanguage } from '$lib/current-language';
 	import { onDestroy } from 'svelte';
 	import { uploadBird, uploadWasm } from '../lib/compile';
-	import { Fileupload } from 'flowbite-svelte';
+	import { Fileupload, Label } from 'flowbite-svelte';
 	import BirdButton from './BirdButton.svelte';
 
 	let files: FileList | undefined = $state(undefined);
@@ -18,9 +18,27 @@
 <div class="flex gap-2 self-end">
 	<div>
 		{#if codeType === 'bird'}
-			<Fileupload bind:files type="file" id="file" accept=".bird" />
+			<div class="flex flex-row">
+				<Label for="bird file upload">Bird File Upload</Label>
+				<Fileupload
+					bind:files
+					type="file"
+					accept=".bird"
+					id="bird file upload"
+					aria-label="bird file upload"
+				/>
+			</div>
 		{:else}
-			<Fileupload bind:files type="file" id="file" accept=".wasm" />
+			<div class="flex flex-row">
+				<Label for="wasm file upload">Wasm File Upload</Label>
+				<Fileupload
+					bind:files
+					type="file"
+					accept=".wasm"
+					id="wasm file upload"
+					aria-label="wasm file upload"
+				/>
+			</div>
 		{/if}
 	</div>
 	<BirdButton

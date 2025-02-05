@@ -111,7 +111,7 @@
 			<h2>Still here?</h2>
 			<DocsText
 				>Check out the
-				<a href="/playground" class="text-primary-500"> playground! </a>
+				<a href="/playground" class="text-primary-600"> playground! </a>
 			</DocsText>
 		</div>
 	</div>

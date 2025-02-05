@@ -6,7 +6,7 @@
 	import { lex } from '$lib/lex';
 	import { textEditorCode } from '$lib/text-editor-code';
 	import { oneDarkTheme } from '@codemirror/theme-one-dark';
-	import { Select } from 'flowbite-svelte';
+	import { Label, Select } from 'flowbite-svelte';
 	import { onDestroy, onMount } from 'svelte';
 	import CodeMirror from 'svelte-codemirror-editor';
 	import type { Unsubscriber } from 'svelte/store';
@@ -137,9 +137,9 @@
 		<FileUpload></FileUpload>
 		<div>
 			<CodeMirror
+				extensions={[oneDarkTheme]}
 				bind:value={$textEditorCode}
 				tabSize={8}
-				extensions={[oneDarkTheme]}
 				styles={{
 					div: {
 						'font-size': '1.5rem'
@@ -150,7 +150,9 @@
 		</div>
 		<div class="flex justify-between">
 			<div class="flex gap-4">
+				<Label for="language">Language</Label>
 				<Select
+					id="language"
 					items={[
 						{ value: 'bird', name: 'Bird' },
 						{ value: 'wasm', name: 'WebAssembly' }
@@ -163,7 +165,9 @@
 						}
 					}}
 				></Select>
+				<Label for="code examples">Code Examples</Label>
 				<Select
+					id="code examples"
 					class="rounded-md"
 					items={[
 						{ value: 'helloWorld', name: 'Hello, World!' },
