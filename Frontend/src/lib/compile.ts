@@ -2,6 +2,7 @@ import wabt from 'wabt';
 import { consoleOutput } from './console-output';
 import { textEditorCode } from './text-editor-code';
 import { currentCompiledWat } from './current-compiled-wat';
+import { dev } from '$app/environment';
 
 
 let instance: WebAssembly.Instance;
@@ -14,10 +15,10 @@ const BLOCK_MARK_OFFSET = 8;
 const BLOCK_HEADER_SIZE = 9;
 const FREE_LIST_START = 5;
 
-const publicIp = import.meta.env.VITE_PUBLIC_IP;
+const SERVER_URL = dev ? "http://localhost:5172" : "https://api.bird-lang.org";
 
 export async function compileBird(code: string) {
-    const response = await fetch(`http://${publicIp}/compile-bird`, {
+    const response = await fetch(`${SERVER_URL}/compile-bird`, {
         headers: {
             "Content-Type": "application/json"
         },
@@ -28,7 +29,6 @@ export async function compileBird(code: string) {
 
     if (response.status === 500) {
         const text = await response.text();
-        console.log("TEXT RESPONSE", text.split("\n"));
         consoleOutput.update((old) => [...old, text]);
         return;
     }
