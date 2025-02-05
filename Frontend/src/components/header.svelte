@@ -16,18 +16,25 @@
 							class="flex w-full items-end justify-end bg-transparent hover:bg-transparent"
 						/>
 						<NavUl>
-							<NavLi href="/" class="text-xl {$page.url.pathname == '/' && 'text-primary-500'}"
+							<NavLi
+								href="/"
+								class="text-xl {$page.url.pathname == '/' && 'text-primary-500'}"
 								>Home</NavLi
 							>
 							<NavLi
 								href="/docs"
-								class="text-xl
-							{$page.url.pathname == '/docs' && 'text-primary-500'}">Docs</NavLi
+								class="text-xl {$page.url.pathname == '/docs' && 'text-primary-500'}"
+								>Docs</NavLi
 							>
 							<NavLi
 								href="/playground"
 								class="text-xl {$page.url.pathname == '/playground' && 'text-primary-500'}"
 								>Playground</NavLi
+							>
+							<NavLi
+								href="/about"
+								class="text-xl {$page.url.pathname == '/about' && 'text-primary-500'}"
+								>About</NavLi
 							>
 							<NavLi href="https://github.com/colecarley/bird-lang" class="text-xl ">Code</NavLi>
 						</NavUl>
