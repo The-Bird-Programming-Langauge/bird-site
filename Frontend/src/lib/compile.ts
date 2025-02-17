@@ -25,7 +25,6 @@ export async function compileBird(code: string) {
         method: 'POST',
         body: JSON.stringify({ code })
     });
-    const buffer = await response.arrayBuffer();
 
     if (response.status === 500) {
         const text = await response.text();
@@ -33,6 +32,7 @@ export async function compileBird(code: string) {
         return;
     }
 
+    const buffer = await response.arrayBuffer();
     compileWasm(buffer);
 }
 
@@ -67,7 +67,9 @@ export async function compileWasm(buffer: ArrayBuffer) {
         instance = wasmInstance;
         memory = new DataView((instance.exports.memory as WebAssembly.Memory).buffer);
 
+        console.time("wasm");
         (instance.exports.main as () => void)();
+        console.timeEnd("wasm");
     } catch (e) {
         consoleOutput.update((old) =>
             [...old, `${e}`]
