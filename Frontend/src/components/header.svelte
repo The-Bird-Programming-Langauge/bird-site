@@ -21,7 +21,8 @@
 							>
 							<NavLi
 								href="/docs"
-								class="text-xl {$page.url.pathname == '/docs' && 'text-primary-600'}">Docs</NavLi
+								class="text-xl {$page.url.pathname.startsWith('/docs') && 'text-primary-600'}"
+								>Docs</NavLi
 							>
 							<NavLi
 								href="/playground"
