@@ -5,7 +5,7 @@
 </script>
 
 {#if color === 'primary'}
-	<div class="bg-[#14aed9] p-12">
+	<div class="bg-primary-400 p-12">
 		<Center>
 			<Squeeze>
 				<slot></slot>

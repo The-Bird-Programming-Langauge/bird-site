@@ -1,18 +1,28 @@
 <script>
-	import CodeMirror from 'svelte-codemirror-editor';
+	import { compileBird } from '$lib/compile';
+	import { consoleOutput } from '$lib/console-output';
+	import { currentCompiledWat } from '$lib/current-compiled-wat';
 	import { textEditorCode } from '$lib/text-editor-code';
 	import { oneDarkTheme } from '@codemirror/theme-one-dark';
-	import Terminal from '../../components/terminal.svelte';
-	import Header from '../../components/header.svelte';
-	import BirdButton from '../../components/BirdButton.svelte';
-	import { consoleOutput } from '$lib/console-output';
-	import { compileBird } from '$lib/compile';
 	import { TabItem, Tabs } from 'flowbite-svelte';
-	import { currentCompiledWat } from '$lib/current-compiled-wat';
+	import CodeMirror from 'svelte-codemirror-editor';
+	import BirdButton from '../../components/BirdButton.svelte';
+	import Header from '../../components/header.svelte';
 </script>
 
 <div class="flex min-h-full flex-col">
 	<Header></Header>
+	<div class="bg-primary-400 flex items-end justify-end p-2">
+		<BirdButton
+			color="dark"
+			onclick={async () => {
+				$consoleOutput = [];
+				await compileBird($textEditorCode);
+			}}
+		>
+			Run
+		</BirdButton>
+	</div>
 	<div class="flex grow">
 		<div class="grid w-full grid-cols-3">
 			<CodeMirror
@@ -36,7 +46,11 @@
 						inactiveClasses="p-4 text-gray-400"
 					>
 						<div class="h-full">
-							<Terminal></Terminal>
+							{#each $consoleOutput as line}
+								<div class="m-0 whitespace-pre p-4">
+									<p class="text-color-on-dark text-xl">{line}</p>
+								</div>
+							{/each}
 						</div>
 					</TabItem>
 					<TabItem
@@ -51,16 +65,5 @@
 				</Tabs>
 			</div>
 		</div>
-	</div>
-	<div class="bg-primary-700 flex items-end justify-end p-6">
-		<BirdButton
-			color="dark"
-			onclick={async () => {
-				$consoleOutput = [];
-				await compileBird($textEditorCode);
-			}}
-		>
-			Run
-		</BirdButton>
 	</div>
 </div>
