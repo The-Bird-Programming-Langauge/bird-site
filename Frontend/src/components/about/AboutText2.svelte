@@ -1,3 +1,3 @@
-<h1 class="text-lg pt-4 {$$restProps.class}">
+<h1 class="pt-4 text-2xl {$$restProps.class} ">
 	<slot></slot>
 </h1>
