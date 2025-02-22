@@ -8,8 +8,11 @@
 	import { oneDarkTheme } from '@codemirror/theme-one-dark';
 	import { Label, Select } from 'flowbite-svelte';
 	import { onDestroy, onMount } from 'svelte';
-	import CodeMirror from 'svelte-codemirror-editor';
+	import { syntaxHighlighting } from "@codemirror/language";
+	import { getLanguageSupport } from "$lib/parser/parser-helpers";
+	import { syntaxHighlightStyle } from "$lib/parser/syntax-highlighter"
 	import type { Unsubscriber } from 'svelte/store';
+	import CodeMirror from 'svelte-codemirror-editor';
 	import BirdButton from '../components/BirdButton.svelte';
 	import DocsCode from '../components/docs/DocsCode.svelte';
 	import FileUpload from '../components/file-upload.svelte';
@@ -137,7 +140,11 @@
 		<FileUpload></FileUpload>
 		<div>
 			<CodeMirror
-				extensions={[oneDarkTheme]}
+				extensions={[
+					getLanguageSupport(), // Parse the code to assign tags for syntax highlighting.
+					syntaxHighlighting(syntaxHighlightStyle), // Apply color to the tags.
+					oneDarkTheme
+				]}
 				bind:value={$textEditorCode}
 				tabSize={8}
 				styles={{

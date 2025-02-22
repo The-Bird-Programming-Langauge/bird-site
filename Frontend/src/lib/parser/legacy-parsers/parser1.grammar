@@ -1,0 +1,143 @@
+// This is an old grammar used for reference.
+
+@top Program {
+    Token*
+}
+
+@tokens {
+    EXP { $[Ee]$[-\+]?$[0-9]+ }
+    IDENT { $[a-zA-Z_]$[a-zA-Z0-9_]* }
+    TYPE_IDENT { "int"|"float"|"bool"|"str"|"void" }
+
+    SINGLELINE_COMMENT[isolate] { "//"![\n]* }
+
+    VAR { "var" }
+    CONST { "const" }
+    PRINT { "print" }
+    IF { "if" }
+    ELSE { "else" }
+    WHILE { "while" }
+    FOR { "for" }
+    DO { "do" }
+    FN { "fn" }
+    RETURN { "return" }
+    BREAK { "break" }
+    CONTINUE { "continue" }
+    TYPE { "type" }
+    BOOL_LITERAL { "true"|"false" }
+    STRUCT { "struct" }
+    SELF { "self" }
+    AS { "as" }
+    AND { "and" }
+    OR { "or" }
+    XOR { "xor" }
+    NOT { "not" }
+
+    TYPE_LITERAL { TYPE_IDENT }
+    FLOAT_LITERAL { $[0-9]+"."$[0-9]+EXP? }
+    INT_LITERAL { $[0-9]+ }
+    STR_LITERAL { "\""![\"]*"\"" }
+    IDENTIFIER { IDENT}
+
+    DOT { "." }
+    QUESTION { "?" }
+    MINUS { "-" }
+    PERCENT { "%" }
+    PLUS { "+" }
+    SLASH { "/" }
+    STAR { "*" }
+    EQUAL { "=" }
+    GREATER { ">" }
+    GREATER_EQUAL { ">=" }
+    LESS { "<" }
+    LESS_EQUAL { "<=" }
+    EQUAL_EQUAL { "==" }
+    BANG_EQUAL { "!=" }
+    PLUS_EQUAL { "+=" }
+    MINUS_EQUAL { "-=" }
+    STAR_EQUAL { "*=" }
+    SLASH_EQUAL { "/=" }
+    PERCENT_EQUAL { "%=" }
+
+    COLON { ":" }
+    COMMA { "," }
+    RBRACE { "}" }
+    LBRACE { "{" }
+    RPAREN { ")" }
+    LBRACKET { "[" }
+    RBRACKET { "]" }
+    LPAREN { "(" }
+    SEMICOLON { ";" }
+    BANG { "!" }
+    ARROW { "->" }
+
+    MULTILINE_COMMENT[isolate] { "/*"![*/]*"*/" }
+
+    WHITE_SPACE { $[ \t\r\n]+ }
+}
+
+@skip { WHITE_SPACE | SINGLELINE_COMMENT | MULTILINE_COMMENT }
+
+Token {
+    VAR |
+    CONST |
+    PRINT |
+    IF |
+    ELSE |
+    WHILE |
+    FOR |
+    DO |
+    FN |
+    RETURN |
+    BREAK |
+    CONTINUE |
+    TYPE |
+    BOOL_LITERAL |
+    STRUCT |
+    SELF |
+    AS |
+    AND |
+    OR |
+    XOR |
+    NOT |
+
+    TYPE_LITERAL |
+    FLOAT_LITERAL |
+    INT_LITERAL |
+    STR_LITERAL |
+    IDENTIFIER |
+
+    DOT |
+    QUESTION |
+    MINUS |
+    PERCENT |
+    PLUS |
+    SLASH |
+    STAR|
+    EQUAL |
+    GREATER |
+    GREATER_EQUAL |
+    LESS |
+    LESS_EQUAL |
+    EQUAL_EQUAL |
+    BANG_EQUAL |
+    PLUS_EQUAL |
+    MINUS_EQUAL |
+    STAR_EQUAL |
+    SLASH_EQUAL |
+    PERCENT_EQUAL |
+
+    COLON |
+    COMMA |
+    RBRACE |
+    LBRACE |
+    RPAREN |
+    LBRACKET |
+    RBRACKET |
+    LPAREN |
+    SEMICOLON |
+    BANG |
+    ARROW
+}
+
+@external propSource syntaxHighlighter from "./syntax-highlighter.js"
