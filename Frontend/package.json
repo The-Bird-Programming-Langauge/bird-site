@@ -10,9 +10,10 @@
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"format": "prettier --write .",
 		"lint": "prettier --check . && eslint .",
-		"compile-grammar": "lezer-generator src/lib/codemirror/parser/parser.grammar -o src/lib/codemirror/parser/parser.js"
+		"compile-grammar": "lezer-generator src/lib/parser/parser.grammar -o src/lib/parser/parser.js"
 	},
 	"devDependencies": {
+		"@lezer/generator": "^1.7.2",
 		"@sveltejs/adapter-auto": "^3.0.0",
 		"@sveltejs/kit": "^2.0.0",
 		"@sveltejs/vite-plugin-svelte": "^4.0.0",
@@ -38,7 +39,13 @@
 		"vite": "^5.0.3"
 	},
 	"dependencies": {
+		"@codemirror/basic-setup": "^0.20.0",
+		"@codemirror/language": "^6.10.8",
+		"@codemirror/state": "^6.5.2",
 		"@codemirror/theme-one-dark": "^6.1.2",
+		"@codemirror/view": "^6.36.3",
+		"@lezer/highlight": "^1.0.0",
+		"@lezer/lr": "^1.0.0",
 		"@sveltejs/adapter-vercel": "^5.6.1",
 		"bird-site": "file:",
 		"bird-site-frontend": "file:",
