@@ -5,6 +5,7 @@
 	import { getCode } from '$lib/getCode';
 	import { lex } from '$lib/lex';
 	import { textEditorCode } from '$lib/text-editor-code';
+	import { getExtensions } from '$lib/codemirror/codemirror-helpers'
 	import { oneDarkTheme } from '@codemirror/theme-one-dark';
 	import { Label, Select } from 'flowbite-svelte';
 	import { onDestroy, onMount } from 'svelte';
@@ -137,7 +138,10 @@
 		<FileUpload></FileUpload>
 		<div>
 			<CodeMirror
-				extensions={[oneDarkTheme]}
+				extensions={[
+					oneDarkTheme,
+					...getExtensions(), // Apply extensions for additional functionality like syntax highlighting.
+				]}
 				bind:value={$textEditorCode}
 				tabSize={8}
 				styles={{

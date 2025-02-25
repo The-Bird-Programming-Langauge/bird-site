@@ -3,6 +3,7 @@
 	import { consoleOutput } from '$lib/console-output';
 	import { currentCompiledWat } from '$lib/current-compiled-wat';
 	import { textEditorCode } from '$lib/text-editor-code';
+	import { getExtensions } from '$lib/codemirror/codemirror-helpers'
 	import { oneDarkTheme } from '@codemirror/theme-one-dark';
 	import { TabItem, Tabs } from 'flowbite-svelte';
 	import CodeMirror from 'svelte-codemirror-editor';
@@ -26,7 +27,10 @@
 	<div class="flex grow">
 		<div class="grid w-full grid-cols-3">
 			<CodeMirror
-				extensions={[oneDarkTheme]}
+				extensions={[
+					oneDarkTheme,
+					...getExtensions(), // Apply extensions for additional functionality like syntax highlighting.
+				]}
 				basic
 				bind:value={$textEditorCode}
 				tabSize={8}
