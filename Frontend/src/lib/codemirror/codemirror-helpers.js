@@ -6,7 +6,7 @@ import { keymap } from "@codemirror/view";
 import { Prec } from "@codemirror/state";
 import { parser } from "./parser/parser.js"
 import { syntaxHighlightStyle } from "$lib/codemirror/syntax-highlighter"
-import { autoCompletions } from "$lib/codemirror/auto-completer"
+import { getAutoCompletions } from "$lib/codemirror/auto-completer"
 
 // Returns a list of extensions that are acceptable by codemirror.
 // Extensions add features to codemiror.
@@ -18,9 +18,9 @@ export function getExtensions() {
 	);
 
     return [
-        getLanguageSupport(), // Parse the code to assign tags for syntax highlighting.
+        getLanguageSupport(), // Parse the code and assign tags for syntax highlighting.
         syntaxHighlighting(syntaxHighlightStyle), // Apply color to the tags.
-        autocompletion({override: [autoCompletions]}), // Apply auto completions based on the coding context.
+        autocompletion({override: [getAutoCompletions]}), // Apply auto completions based on the coding context.
         keyMapExtensions, // Add any non-default keybinds.
     ]
 }

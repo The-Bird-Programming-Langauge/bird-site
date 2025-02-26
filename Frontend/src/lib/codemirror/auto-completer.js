@@ -1,18 +1,27 @@
+// Creates a list of auto completions based on the current word being typed out.
+// Auto completions include keywords, types, and identifiers.
+
 import { syntaxTree } from "@codemirror/language"
 
-export function autoCompletions(context) {
+// Returns a list of possible auto completions based on the editor context.
+export function getAutoCompletions(context) {
+    // Retrieve the character stream (word) being written.
     let word = context.matchBefore(/\w*/);
-    console.log(word.from + " " + word.to);
 
-    if (word.from == word.to && !context.explicit) {
+    // Ignore anything that is not a character stream for tab completion.
+    if (word.from === word.to && !context.explicit) {
         return null;
     }
 
-    let identifiers = findNodesOfType(context.state, "IDENTIFIER");
-    let identifierOptions = identifiers
-        .filter(node => !(node.from <= word.from && node.to >= word.to)) // Exclude current word
-        .map(node => ({
-            label: context.state.sliceDoc(node.from, node.to),
+    // Retrieve all identifier nodes from the tree
+    let identifierNodes = findNodesOfType(context, "IDENTIFIER");
+    let identifierOptions = identifierNodes
+        // Avoid adding the current identifier being written as an auto completion
+        // by checking if the current word and the identifer overlap.
+        .filter(identifierNode => !(identifierNode.from <= word.from && identifierNode.to >= word.to))
+        // Create an auto completion object from the identifier node.
+        .map(identifierNode => ({
+            label: context.state.sliceDoc(identifierNode.from, identifierNode.to),
             type: "variable"
         }));
 
@@ -45,11 +54,14 @@ export function autoCompletions(context) {
     }
 }
 
-function findNodesOfType(state, typeName) {
-    let tree = syntaxTree(state);
+// Traverses every node in the tree and returns a list of nodes of the specified type.
+function findNodesOfType(context, typeName) {
+    let tree = syntaxTree(context.state);
     let nodes = [];
 
-    function traverse(cursor) {
+    // Traverses every node of the tree.
+    function preorderTraversal(cursor) {
+        // Visit the current node. Add it if it is of the correct type.
         if (cursor.name === typeName) {
             nodes.push({
                 from: cursor.from,
@@ -57,16 +69,18 @@ function findNodesOfType(state, typeName) {
                 name: cursor.name
             });
         }
+
+        // Continue traversal.
         if (cursor.firstChild()) {
             do {
-                traverse(cursor);
+                preorderTraversal(cursor);
             } while (cursor.nextSibling());
             cursor.parent();
         }
     }
 
     let cursor = tree.cursor();
-    traverse(cursor);
+    preorderTraversal(cursor);
 
     return nodes;
 }
