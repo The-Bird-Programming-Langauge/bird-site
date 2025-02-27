@@ -10,7 +10,7 @@
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"format": "prettier --write .",
 		"lint": "prettier --check . && eslint .",
-		"compile-grammar": "lezer-generator src/lib/parser/parser.grammar -o src/lib/parser/parser.js"
+		"compile-grammar": "lezer-generator src/lib/codemirror/parser/parser.grammar -o src/lib/codemirror/parser/parser.js"
 	},
 	"devDependencies": {
 		"@lezer/generator": "^1.7.2",

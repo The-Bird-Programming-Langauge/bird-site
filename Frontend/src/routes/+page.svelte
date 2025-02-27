@@ -5,12 +5,10 @@
 	import { getCode } from '$lib/getCode';
 	import { lex } from '$lib/lex';
 	import { textEditorCode } from '$lib/text-editor-code';
+	import { getExtensions } from '$lib/codemirror/codemirror-helpers'
 	import { oneDarkTheme } from '@codemirror/theme-one-dark';
 	import { Label, Select } from 'flowbite-svelte';
 	import { onDestroy, onMount } from 'svelte';
-	import { syntaxHighlighting } from "@codemirror/language";
-	import { getLanguageSupport } from "$lib/parser/parser-helpers";
-	import { syntaxHighlightStyle } from "$lib/parser/syntax-highlighter"
 	import type { Unsubscriber } from 'svelte/store';
 	import CodeMirror from 'svelte-codemirror-editor';
 	import BirdButton from '../components/BirdButton.svelte';
@@ -141,9 +139,8 @@
 		<div>
 			<CodeMirror
 				extensions={[
-					getLanguageSupport(), // Parse the code to assign tags for syntax highlighting.
-					syntaxHighlighting(syntaxHighlightStyle), // Apply color to the tags.
-					oneDarkTheme
+					oneDarkTheme,
+					...getExtensions(), // Apply extensions for additional functionality like syntax highlighting.
 				]}
 				bind:value={$textEditorCode}
 				tabSize={8}

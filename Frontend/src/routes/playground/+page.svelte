@@ -3,6 +3,7 @@
 	import { consoleOutput } from '$lib/console-output';
 	import { currentCompiledWat } from '$lib/current-compiled-wat';
 	import { textEditorCode } from '$lib/text-editor-code';
+	import { getExtensions } from '$lib/codemirror/codemirror-helpers'
 	import { oneDarkTheme } from '@codemirror/theme-one-dark';
 	import { TabItem, Tabs } from 'flowbite-svelte';
 	import { syntaxHighlighting } from "@codemirror/language";
@@ -30,9 +31,8 @@
 		<div class="grid w-full grid-cols-3">
 			<CodeMirror
 				extensions={[
-					getLanguageSupport(), // Parse the code to assign tags for syntax highlighting.
-					syntaxHighlighting(syntaxHighlightStyle), // Apply color to the tags.
-					oneDarkTheme
+					oneDarkTheme,
+					...getExtensions(), // Apply extensions for additional functionality like syntax highlighting.
 				]}
 				basic
 				bind:value={$textEditorCode}
