@@ -9,10 +9,6 @@
 	import CodeMirror from 'svelte-codemirror-editor';
 	import BirdButton from '../../components/BirdButton.svelte';
 	import Header from '../../components/header.svelte';
-
-	import { printAST } from "$lib/codemirror/codemirror-helpers"
-	printAST(`struct x {};
-var y: x = 2;`)
 </script>
 
 <div class="flex min-h-full flex-col">
