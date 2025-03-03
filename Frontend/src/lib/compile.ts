@@ -281,8 +281,8 @@ const moduleOptions = {
             console.log(str);
         },
         print_endline: () => {
-            console.log();
-            consoleOutput.update(old => [...old, "\n"]);
+            // console.log();
+            // consoleOutput.update(old => [...old, "\n"]);
         },
         mem_get_32: (ptr: number, byte_offset: number) => {
             if (!memory) {
