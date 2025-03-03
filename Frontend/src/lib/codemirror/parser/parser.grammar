@@ -2,7 +2,7 @@
 // To compile the grammar: "npm run compile-grammar"
 // Compiling will generate the files parser.js and parser.terms.js, which act as the parser executable.
 
-@external propSource taggedSyntax from "../syntax-highlighter.js"
+@external propSource taggedSyntax from "../syntax-highlighter"
 
 @tokens
 {
@@ -20,25 +20,6 @@
     RBRACE { "}" }
     LBRACKET { "[" }
     RBRACKET { "]" }
-
-    // Term operators: TERM_OP
-    MINUS { "-" }
-    PLUS { "+" }
-
-    // Factor operators: FACTOR_OP
-    STAR { "*" }
-    SLASH { "/" }
-    PERCENT { "%" }
-    
-    // Comparison operators: COMPARISON_OP
-    GREATER { ">" }
-    GREATER_EQUAL { ">=" }
-    LESS { "<" }
-    LESS_EQUAL { "<=" }
-
-    // Equality operators: EQUALITY_OP
-    EQUAL_EQUAL { "==" }
-    BANG_EQUAL { "!=" }
     
     // Assignment operators: ASSIGN_OP
     EQUAL { "=" }
@@ -48,13 +29,29 @@
     SLASH_EQUAL { "/=" }
     PERCENT_EQUAL { "%=" }
 
-    NUMBER
-    {
-        $[0-9]+ | // INT_LITERAL
-        $[0-9]+"."$[0-9]+($[Ee]$[-\+]?$[0-9]+)? //FLOAT_LITERAL
-    }
+    // Equality operators: EQUALITY_OP
+    EQUAL_EQUAL { "==" }
+    BANG_EQUAL { "!=" }
+    
+    // Comparison operators: COMPARISON_OP
+    GREATER { ">" }
+    GREATER_EQUAL { ">=" }
+    LESS { "<" }
+    LESS_EQUAL { "<=" }
 
+    // Factor operators: FACTOR_OP
+    STAR { "*" }
+    SLASH { "/" }
+    PERCENT { "%" }
+
+    // Term operators: TERM_OP
+    MINUS { "-" }
+    PLUS { "+" }
+
+    @precedence { FLOAT_LITERAL, INT_LITERAL }
     IDENTIFIER { $[a-zA-Z_]$[a-zA-Z0-9_]* }
+    FLOAT_LITERAL { $[0-9]+"."$[0-9]+($[Ee]$[-\+]?$[0-9]+)? }
+    INT_LITERAL { $[0-9]+ }
 
     singlelineCommentContent { ![\n]+ }
     whitespace { $[ \t\n\r]+ }
@@ -88,12 +85,28 @@
 // To avoid ambiguity in their distinguishment, we use the kw<> function.
 kw<term> { @specialize[@name={term}]<IDENTIFIER, term> }
 
+BOOL_LITERAL
+{
+    kw<"true"> |
+    kw<"false">
+}
+
+TYPE_LITERAL
+{
+    kw<"int"> |
+    kw<"float"> |
+    kw<"bool"> |
+    kw<"str"> |
+    kw<"void">
+}
+
 
 
 @precedence
 {
     match_expr @left
     array_initialization @left
+    primary @left
     struct_initialization @left
     direct_member_access @left
     subscript @left
@@ -107,14 +120,24 @@ kw<term> { @specialize[@name={term}]<IDENTIFIER, term> }
     and @left
     xor @left
     or @left
-    else @right
     ternary @right
     assign @right
 }
 
 @top Program
 {
-    (Stmt*)?
+    maybe_stmts
+}
+
+maybe_stmts
+{
+    stmts?
+}
+
+stmts 
+{
+    Stmt |
+    stmts Stmt
 }
 
 Stmt
@@ -126,23 +149,35 @@ Stmt
 
 Block_valid_stmt
 {
-    Decl_stmt SEMICOLON |
+    Decl_stmt |
     If_stmt |
-    Const_stmt SEMICOLON |
-    Print_stmt SEMICOLON |
+    Const_stmt |
+    Print_stmt |
     Block |
     While_stmt |
     For_stmt |
-    Return_stmt SEMICOLON |
-    Break_stmt SEMICOLON |
-    Continue_stmt SEMICOLON |
-    Expr_stmt SEMICOLON |
-    Type_stmt SEMICOLON
+    Return_stmt |
+    Break_stmt |
+    Continue_stmt |
+    Expr_stmt |
+    Type_stmt
 }
 
 Struct_decl
 {
-    kw<"struct"> IDENTIFIER LBRACE (Field_member (COMMA Field_member)*)? RBRACE
+    kw<"struct"> IDENTIFIER LBRACE maybe_field_map RBRACE
+}
+
+maybe_field_map
+{
+    field_map? |
+    field_map COMMA
+}
+
+field_map 
+{
+    Field_member |
+    field_map COMMA Field_member
 }
 
 Field_member
@@ -159,36 +194,47 @@ Type_identifier
 
 Decl_stmt
 {
-    kw<"var"> IDENTIFIER EQUAL Expr |
-    kw<"var"> IDENTIFIER COLON Type_identifier EQUAL Expr
+    kw<"var"> IDENTIFIER EQUAL Expr SEMICOLON |
+    kw<"var"> IDENTIFIER COLON Type_identifier EQUAL Expr SEMICOLON
 }
 
 If_stmt
 {
-    kw<"if"> Expr Block !else kw<"else"> |
+    kw<"if"> Expr Block |
     kw<"if"> Expr Block kw<"else"> Block |
     kw<"if"> Expr Block kw<"else"> If_stmt
 }
 
 Const_stmt
 {
-    kw<"const"> IDENTIFIER EQUAL Expr |
-    kw<"const"> IDENTIFIER COLON Type_identifier EQUAL Expr
+    kw<"const"> IDENTIFIER EQUAL Expr SEMICOLON |
+    kw<"const"> IDENTIFIER COLON Type_identifier EQUAL Expr SEMICOLON
 }
 
 Print_stmt
 {
-    kw<"print"> Expr (COMMA Expr)*
+    kw<"print"> arg_list SEMICOLON
 }
 
 Block
 {
-    LBRACE (Block_valid_stmt*)? RBRACE
+    LBRACE maybe_block_valid_stmts RBRACE
+}
+
+maybe_block_valid_stmts
+{
+    block_valid_stmts?
+}
+
+block_valid_stmts
+{
+    Block_valid_stmt |
+    block_valid_stmts Block_valid_stmt
 }
 
 Func
 {
-    kw<"fn"> IDENTIFIER LPAREN (Param (COMMA Param)*)? RPAREN Return_type? Block
+    kw<"fn"> IDENTIFIER LPAREN maybe_param_list RPAREN Return_type Block
 }
 
 While_stmt
@@ -198,39 +244,66 @@ While_stmt
 
 For_stmt
 {
-    kw<"for"> Maybe_block_valid_stmt Expr? SEMICOLON Expr? Block
+    kw<"for"> maybe_block_valid_stmt maybe_expr SEMICOLON maybe_expr Block
 }
 
-Maybe_block_valid_stmt
+maybe_block_valid_stmt
 {
     SEMICOLON |
     Block_valid_stmt
 }
 
+maybe_expr
+{
+    Expr?
+}
+
 Return_stmt
 {
-    kw<"return"> |
-    kw<"return"> Expr
+    kw<"return"> SEMICOLON |
+    kw<"return"> Expr SEMICOLON
 }
 
 Break_stmt
 {
-   kw<"break">
+   kw<"break"> SEMICOLON
 }
 
 Continue_stmt
 {
-   kw<"continue">
+   kw<"continue"> SEMICOLON
 }
 
 Expr_stmt
 {
-    Expr
+    Expr SEMICOLON
 }
 
 Type_stmt
 {
-    kw<"type"> IDENTIFIER EQUAL Type_identifier
+    kw<"type"> IDENTIFIER EQUAL Type_identifier SEMICOLON
+}
+
+maybe_arg_list
+{
+    arg_list?
+}
+
+arg_list
+{
+    Expr |
+    arg_list COMMA Expr
+}
+
+maybe_param_list    
+{
+    param_list?
+}
+
+param_list
+{
+    Param |
+    param_list COMMA Param
 }
 
 Param
@@ -240,20 +313,13 @@ Param
 
 Return_type
 {
-    ARROW Type_identifier
+    (ARROW Type_identifier)?
 }
 
 Expr
 {
     Assign_expr |
     Ternary_expr |
-    Equality_expr |
-    Comparison_expr |
-    Term_expr |
-    Factor_expr |
-    And_expr |
-    Xor_expr |
-    Or_expr |
     Unary_expr |
     Type_cast |
     Call_expr |
@@ -264,6 +330,7 @@ Expr
     Array_initialization |
     Match |
     Primary |
+    Binary_expr |
     Grouping
 }
 
@@ -287,59 +354,59 @@ Ternary_expr
     Expr QUESTION Expr COLON !ternary Expr
 }
 
-Equality_expr
-{
-    Expr EQUALITY_OP !equality Expr
-}
-
-Comparison_expr
-{
-    Expr COMPARISON_OP !comparison Expr
-}
-
-Term_expr
-{
-    Expr TERM_OP !term Expr
-}
-
-Factor_expr
-{
-    Expr FACTOR_OP !factor Expr
-}
-
 Unary_expr
 {
     PREFIX_UNARY_OP !unary Expr
 }
 
-And_expr
+equality_expr
+{
+    Expr EQUALITY_OP !equality Expr
+}
+
+comparison_expr
+{
+    Expr COMPARISON_OP !comparison Expr
+}
+
+term_expr
+{
+    Expr TERM_OP !term Expr
+}
+
+factor_expr
+{
+    Expr FACTOR_OP !factor Expr
+}
+
+and_expr
 {
     Expr kw<"and"> !and Expr
 }
 
-Xor_expr
+xor_expr
 {
     Expr kw<"xor"> !xor Expr
 }
 
-Or_expr
+or_expr
 {
     Expr kw<"or"> !or Expr
 }
 
 Call_expr
 {
-    Expr LPAREN (Expr (COMMA Expr)*)? !call RPAREN
+    Expr LPAREN maybe_arg_list !call RPAREN
 }
 
 Struct_initialization
 {
-    IDENTIFIER !struct_initialization LBRACE Maybe_struct_initialization_list? RBRACE
+    IDENTIFIER !struct_initialization LBRACE Maybe_struct_initialization_list RBRACE
 }
 
 Maybe_struct_initialization_list
 {
-    Struct_initialization_list |
+    Struct_initialization_list? |
     Struct_initialization_list COMMA
 }
 
@@ -351,7 +418,7 @@ Struct_initialization_list
 
 Array_initialization
 {
-    LBRACKET (Expr (COMMA Expr)*)? !array_initialization RBRACKET
+    LBRACKET maybe_arg_list !array_initialization RBRACKET
 }
 
 Subscript_expr
@@ -366,12 +433,12 @@ Direct_member_access
 
 Match
 {
-    kw<"match"> Expr LBRACKET Maybe_match_arms? Match_else_arm !match_expr RBRACKET
+    kw<"match"> Expr LBRACKET Maybe_match_arms Match_else_arm !match_expr RBRACKET
 }
 
 Maybe_match_arms
 {
-    Match_arms |
+    Match_arms? |
     Match_arms COMMA
 }
 
@@ -388,42 +455,27 @@ Match_else_arm
 
 Primary
 {
-    IDENTIFIER |
-    NUMBER |
+    IDENTIFIER !primary |
+    INT_LITERAL |
+    FLOAT_LITERAL |
     BOOL_LITERAL |
     STR_LITERAL
+}
+
+Binary_expr
+{
+    equality_expr |
+    comparison_expr |
+    term_expr |
+    factor_expr |
+    and_expr |
+    xor_expr |
+    or_expr
 }
 
 Grouping
 {
    LPAREN Expr RPAREN 
-}
-
-TERM_OP
-{
-    MINUS |
-    PLUS
-}
-
-FACTOR_OP
-{
-    STAR |
-    SLASH |
-    PERCENT
-}
-
-COMPARISON_OP
-{
-    GREATER |
-    GREATER_EQUAL |
-    LESS |
-    LESS_EQUAL
-}
-
-EQUALITY_OP
-{
-    EQUAL_EQUAL |
-    BANG_EQUAL
 }
 
 ASSIGN_OP
@@ -436,23 +488,35 @@ ASSIGN_OP
     PERCENT_EQUAL
 }
 
+EQUALITY_OP
+{
+    EQUAL_EQUAL |
+    BANG_EQUAL
+}
+
+COMPARISON_OP
+{
+    GREATER |
+    GREATER_EQUAL |
+    LESS |
+    LESS_EQUAL
+}
+
+FACTOR_OP
+{
+    STAR |
+    SLASH |
+    PERCENT
+}
+
+TERM_OP
+{
+    MINUS |
+    PLUS
+}
+
 PREFIX_UNARY_OP
 {
     kw<"not"> |
     MINUS
-}
-
-BOOL_LITERAL
-{
-    kw<"true"> |
-    kw<"false">
-}
-
-TYPE_LITERAL
-{
-    kw<"int"> |
-    kw<"float"> |
-    kw<"bool"> |
-    kw<"str"> |
-    kw<"void">
 }

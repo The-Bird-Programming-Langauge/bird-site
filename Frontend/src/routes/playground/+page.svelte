@@ -6,12 +6,13 @@
 	import { getExtensions } from '$lib/codemirror/codemirror-helpers'
 	import { oneDarkTheme } from '@codemirror/theme-one-dark';
 	import { TabItem, Tabs } from 'flowbite-svelte';
-	import { syntaxHighlighting } from "@codemirror/language";
-	import { getLanguageSupport } from "$lib/parser/parser-helpers";
-	import { syntaxHighlightStyle } from "$lib/parser/syntax-highlighter"
 	import CodeMirror from 'svelte-codemirror-editor';
 	import BirdButton from '../../components/BirdButton.svelte';
 	import Header from '../../components/header.svelte';
+
+	import { printAST } from "$lib/codemirror/codemirror-helpers"
+	printAST(`struct x {};
+var y: x = 2;`)
 </script>
 
 <div class="flex min-h-full flex-col">
