@@ -139,8 +139,8 @@
 		<div>
 			<CodeMirror
 				extensions={[
-					oneDarkTheme,
 					...getExtensions(), // Apply extensions for additional functionality like syntax highlighting.
+					oneDarkTheme,
 				]}
 				bind:value={$textEditorCode}
 				tabSize={8}

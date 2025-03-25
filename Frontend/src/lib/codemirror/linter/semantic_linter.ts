@@ -36,38 +36,40 @@ export const semantic_linter = linter((context: EditorView) => {
 
     if (!cursor.firstChild()) return; // stmt
 
-    if (cursor.name == "Block") {
+    if (cursor.name === "Block") {
       visit_block(cursor.node.cursor());
-    } else if (cursor.name == "Decl_stmt") {
+    } else if (cursor.name === "Decl_stmt") {
       visit_decl_stmt(cursor.node.cursor());
-    } else if (cursor.name == "Expr_stmt") {
+    } else if (cursor.name === "Expr_stmt") {
       visit_expr_stmt(cursor.node.cursor());
-    } else if (cursor.name == "Print_stmt") {
+    } else if (cursor.name === "Print_stmt") {
       visit_print_stmt(cursor.node.cursor());
-    } else if (cursor.name == "Const_stmt") {
+    } else if (cursor.name === "Const_stmt") {
       visit_const_stmt(cursor.node.cursor());
-    } else if (cursor.name == "While_stmt") {
+    } else if (cursor.name === "While_stmt") {
       visit_while_stmt(cursor.node.cursor());
-    } else if (cursor.name == "For_stmt") {
+    } else if (cursor.name === "For_stmt") {
       visit_for_stmt(cursor.node.cursor());
-    } else if (cursor.name == "If_stmt") {
+    } else if (cursor.name === "If_stmt") {
       visit_if_stmt(cursor.node.cursor());
-    } else if (cursor.name == "Return_stmt") {
+    } else if (cursor.name === "Return_stmt") {
       visit_return_stmt(cursor.node.cursor());
-    } else if (cursor.name == "Break_stmt") {
+    } else if (cursor.name === "Break_stmt") {
       visit_break_stmt(cursor.node.cursor());
-    } else if (cursor.name == "Continue_stmt") {
+    } else if (cursor.name === "Continue_stmt") {
       visit_continue_stmt(cursor.node.cursor());
     }
   }
 
   function visit_block(cursor: TreeCursor) {
     env.push_env();
+    
+    if (!cursor.firstChild()) return; // LBRACE
   
-    if (!cursor.firstChild()) return; // Block_valid_stmt
+    if (!cursor.nextSibling() || cursor.name !== "Block_valid_stmt") return; // Block_valid_stmt
     do {
       visit_stmt(cursor.node.cursor());
-    } while (cursor.nextSibling());
+    } while (cursor.nextSibling() && cursor.name === "Block_valid_stmt"); // Block_valid_stmt
   
     env.pop_env();
   }
@@ -82,7 +84,6 @@ export const semantic_linter = linter((context: EditorView) => {
 
     if (identifier_in_any_environment(identifier_text)) {
       failed_redeclaration = true;
-
       diagnostics.push({
         from: identifier_node.from,
         to: identifier_node.to,
@@ -111,7 +112,7 @@ export const semantic_linter = linter((context: EditorView) => {
   }
 
   function visit_expr_stmt(cursor: TreeCursor) {
-    if (!cursor.firstChild()) return; // Expr
+    if (!cursor.firstChild()) return; // print
     visit_expr(cursor.node.cursor());
   }
 
@@ -127,14 +128,13 @@ export const semantic_linter = linter((context: EditorView) => {
   function visit_const_stmt(cursor: TreeCursor) {
     let failed_redeclaration = false;
     
-    if (!cursor.firstChild()) return; // var
+    if (!cursor.firstChild()) return; // const
     if (!cursor.nextSibling() || cursor.name !== "IDENTIFIER") return; // IDENTIFIER
     const identifier_node = cursor.node.cursor();
     const identifier_text = get_text(identifier_node);
 
     if (identifier_in_any_environment(identifier_text)) {
       failed_redeclaration = true;
-
       diagnostics.push({
         from: identifier_node.from,
         to: identifier_node.to,
@@ -243,7 +243,6 @@ export const semantic_linter = linter((context: EditorView) => {
         severity: "error",
         message: "Return statement is declared outside of a function.",
       });
-
       return;
     }
   
@@ -289,27 +288,27 @@ export const semantic_linter = linter((context: EditorView) => {
   function visit_expr(cursor: TreeCursor) {
     if (!cursor.firstChild()) return; // expr
 
-    if (cursor.name == "Binary_expr") {
+    if (cursor.name === "Binary_expr") {
       visit_binary(cursor.node.cursor());
-    } else if (cursor.name == "Unary_expr") {
+    } else if (cursor.name === "Unary_expr") {
       visit_unary_expr(cursor.node.cursor());
-    } else if (cursor.name == "Primary") {
+    } else if (cursor.name === "Primary") {
       visit_primary(cursor.node.cursor());
-    } else if (cursor.name == "Ternary_expr") {
+    } else if (cursor.name === "Ternary_expr") {
       visit_ternary_expr(cursor.node.cursor());
-    } else if (cursor.name == "Assign_expr") {
+    } else if (cursor.name === "Assign_expr") {
       visit_assign_expr(cursor.node.cursor());
-    } else if (cursor.name == "Grouping") {
+    } else if (cursor.name === "Grouping") {
       visit_grouping(cursor.node.cursor());
     }
   }
   
   function visit_binary(cursor: TreeCursor) {
-    if (!cursor.firstChild() || cursor.name !== "Expr") return; // Expr
+    if (!cursor.firstChild()) return; // Expr
     visit_expr(cursor.node.cursor());
 
-    if (!cursor.nextSibling()) return; // operator
-    if (!cursor.nextSibling() || cursor.name !== "Expr") return; // Expr
+    if (!cursor.nextSibling()) return; // binary_op
+    if (!cursor.nextSibling()) return; // Expr
     visit_expr(cursor.node.cursor());
   }
   
@@ -320,7 +319,7 @@ export const semantic_linter = linter((context: EditorView) => {
   }
   
   function visit_primary(cursor: TreeCursor) {
-    if (!cursor.firstChild() || cursor.name !== "IDENTIFIER") return; // IDENTIFIER
+    if (!cursor.firstChild()) return; // IDENTIFIER
     const identifier_node = cursor.node.cursor();
     const identifier_text = get_text(identifier_node);
 
@@ -335,7 +334,7 @@ export const semantic_linter = linter((context: EditorView) => {
   }
   
   function visit_ternary_expr(cursor: TreeCursor) {
-    if (!cursor.firstChild() || cursor.name !== "Expr") return; // Expr
+    if (!cursor.firstChild()) return; // Expr
     visit_expr(cursor.node.cursor());
 
     if (!cursor.nextSibling()) return; // QUESTION
@@ -348,7 +347,7 @@ export const semantic_linter = linter((context: EditorView) => {
   }
   
   function visit_assign_expr(cursor: TreeCursor) {
-    if (!cursor.firstChild() || cursor.name !== "Primary") return; // IDENTIFIER
+    if (!cursor.firstChild()) return; // Primary
     const identifier_node = cursor.node.cursor();
     const identifier_text = get_text(identifier_node);
 
@@ -359,7 +358,6 @@ export const semantic_linter = linter((context: EditorView) => {
         severity: "error",
         message: `Variable '${identifier_text}' does not exist.`,
       });
-
       return;
     }
 

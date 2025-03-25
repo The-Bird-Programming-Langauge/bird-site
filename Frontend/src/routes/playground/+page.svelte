@@ -28,8 +28,8 @@
 		<div class="grid w-full grid-cols-3">
 			<CodeMirror
 				extensions={[
-					oneDarkTheme,
 					...getExtensions(), // Apply extensions for additional functionality like syntax highlighting.
+					oneDarkTheme,
 				]}
 				basic
 				bind:value={$textEditorCode}
