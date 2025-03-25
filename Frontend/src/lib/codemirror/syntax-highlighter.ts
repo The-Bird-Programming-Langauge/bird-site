@@ -1,13 +1,18 @@
+// Performs syntax highlighting by assigning tags to Lexer/Parser objects and applying colors to the tags.
+// A HighlightStyle object is created, which can be converted to a codemirror extension.
+
 import { styleTags, tags as t } from "@lezer/highlight"
 import { HighlightStyle } from "@codemirror/language"
 
 // Assigns tags to the objects created in the parser.
 // Tags of the same type are colored the same.
 export const taggedSyntax = styleTags({
-    "if print while for return break continue as match": t.keyword,
+    "if else print while for return break continue match": t.keyword,
     "var const type fn struct": t.definitionKeyword,
 
     "int float bool str void": t.typeName,
+    "Type_identifier/IDENTIFIER": t.typeName,
+
     "true false": t.bool,
 
     DOT: t.operator,
@@ -34,7 +39,7 @@ export const taggedSyntax = styleTags({
     STAR_EQUAL: t.operator,
     SLASH_EQUAL: t.operator,
     PERCENT_EQUAL: t.operator,
-    "not": t.operator,
+    "not and or xor as": t.operator,
 
     LPAREN: t.paren,
     RPAREN: t.paren,
@@ -44,7 +49,8 @@ export const taggedSyntax = styleTags({
     RBRACKET: t.squareBracket,
 
     IDENTIFIER: t.variableName,
-    NUMBER: t.number,
+    INT_LITERAL: t.integer,
+    FLOAT_LITERAL: t.float,
     STR_LITERAL: t.string,
 
     SINGLELINE_COMMENT: t.comment,
@@ -57,6 +63,7 @@ export const syntaxHighlightStyle = HighlightStyle.define([
     {tag: t.definitionKeyword, class: "text-sky-400"},
     
     {tag: t.typeName, class: "text-green-400"},
+    
     {tag: t.bool, class: "text-sky-400"},
 
     {tag: t.operator, class: "text-white"},
@@ -66,7 +73,8 @@ export const syntaxHighlightStyle = HighlightStyle.define([
     {tag: t.brace, class: "text-orange-300"},
 
     {tag: t.variableName, class: "text-sky-200"},
-    {tag: t.number, class: "text-yellow-300"},
+    {tag: t.integer, class: "text-yellow-300"},
+    {tag: t.float, class: "text-yellow-300"},
     {tag: t.string, class: "text-orange-300"},
 
     {tag: t.comment, class: "text-gray-400"},
