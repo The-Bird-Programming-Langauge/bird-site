@@ -2,521 +2,451 @@
 // To compile the grammar: "npm run compile-grammar"
 // Compiling will generate the files parser.js and parser.terms.js, which act as the parser executable.
 
-@external propSource taggedSyntax from "../syntax-highlighter"
+@external propSource taggedSyntax from "../syntax_highlighter"
 
-@tokens
-{
-    // Ungrouped symbols/operators
-    DOT { "." }
-    QUESTION { "?" }
-    COLON { ":" }
-    COMMA { "," }
-    SEMICOLON { ";" }
-    ARROW { "->" }
-    FAT_ARROW { "=>" }
-    LPAREN { "(" }
-    RPAREN { ")" }
-    LBRACE { "{" }
-    RBRACE { "}" }
-    LBRACKET { "[" }
-    RBRACKET { "]" }
-    
-    // Assignment operators: ASSIGN_OP
-    EQUAL { "=" }
-    PLUS_EQUAL { "+=" }
-    MINUS_EQUAL { "-=" }
-    STAR_EQUAL { "*=" }
-    SLASH_EQUAL { "/=" }
-    PERCENT_EQUAL { "%=" }
+@tokens {
+  // Ungrouped symbols/operators
+  DOT { "." }
+  QUESTION { "?" }
+  COLON { ":" }
+  COMMA { "," }
+  SEMICOLON { ";" }
+  ARROW { "->" }
+  FAT_ARROW { "=>" }
+  LPAREN { "(" }
+  RPAREN { ")" }
+  LBRACE { "{" }
+  RBRACE { "}" }
+  LBRACKET { "[" }
+  RBRACKET { "]" }
+  
+  // Assignment operators: ASSIGN_OP
+  EQUAL { "=" }
+  PLUS_EQUAL { "+=" }
+  MINUS_EQUAL { "-=" }
+  STAR_EQUAL { "*=" }
+  SLASH_EQUAL { "/=" }
+  PERCENT_EQUAL { "%=" }
 
-    // Equality operators: EQUALITY_OP
-    EQUAL_EQUAL { "==" }
-    BANG_EQUAL { "!=" }
-    
-    // Comparison operators: COMPARISON_OP
-    GREATER { ">" }
-    GREATER_EQUAL { ">=" }
-    LESS { "<" }
-    LESS_EQUAL { "<=" }
+  // Equality operators: EQUALITY_OP
+  EQUAL_EQUAL { "==" }
+  BANG_EQUAL { "!=" }
+  
+  // Comparison operators: COMPARISON_OP
+  GREATER { ">" }
+  GREATER_EQUAL { ">=" }
+  LESS { "<" }
+  LESS_EQUAL { "<=" }
 
-    // Factor operators: FACTOR_OP
-    STAR { "*" }
-    SLASH { "/" }
-    PERCENT { "%" }
+  // Factor operators: FACTOR_OP
+  STAR { "*" }
+  SLASH { "/" }
+  PERCENT { "%" }
 
-    // Term operators: TERM_OP
-    MINUS { "-" }
-    PLUS { "+" }
+  // Term operators: TERM_OP
+  MINUS { "-" }
+  PLUS { "+" }
 
-    @precedence { FLOAT_LITERAL, INT_LITERAL }
-    IDENTIFIER { $[a-zA-Z_]$[a-zA-Z0-9_]* }
-    FLOAT_LITERAL { $[0-9]+"."$[0-9]+($[Ee]$[-\+]?$[0-9]+)? }
-    INT_LITERAL { $[0-9]+ }
+  @precedence { FLOAT_LITERAL, INT_LITERAL }
+  IDENTIFIER { $[a-zA-Z_]$[a-zA-Z0-9_]* }
+  FLOAT_LITERAL { $[0-9]+"."$[0-9]+($[Ee]$[-\+]?$[0-9]+)? }
+  INT_LITERAL { $[0-9]+ }
 
-    singlelineCommentContent { ![\n]+ }
-    whitespace { $[ \t\n\r]+ }
+  singlelineCommentContent { ![\n]+ }
+  whitespace { $[ \t\n\r]+ }
 }
 
 @skip { SINGLELINE_COMMENT | MULTILINE_COMMENT | whitespace }
 
 // Comments/strings use JavaScript/C++ lezer implementations.
-@skip {}
-{
-    SINGLELINE_COMMENT { "//" (singlelineCommentContent)* "\n" }
-    MULTILINE_COMMENT { "/*" (multilineCommentContent | multilineCommentNewline)* multilineCommentEnd }
-    STR_LITERAL { "\"" (stringLiteralContent | stringLiteralNewline)* stringLiteralEnd }
+@skip {} {
+  SINGLELINE_COMMENT { "//" (singlelineCommentContent)* "\n" }
+  MULTILINE_COMMENT { "/*" (multilineCommentContent | multilineCommentNewline)* multilineCommentEnd }
+  STR_LITERAL { "\"" (stringLiteralContent | stringLiteralNewline)* stringLiteralEnd }
 }
 
-@local tokens
-{
-    multilineCommentEnd { "*/" }
-    multilineCommentNewline { "\n" }
-    @else multilineCommentContent
+@local tokens {
+  multilineCommentEnd { "*/" }
+  multilineCommentNewline { "\n" }
+  @else multilineCommentContent
 }
 
-@local tokens
-{
-    stringLiteralEnd { "\"" }
-    stringLiteralNewline { "\n" }
-    @else stringLiteralContent
+@local tokens {
+  stringLiteralEnd { "\"" }
+  stringLiteralNewline { "\n" }
+  @else stringLiteralContent
 }
 
 // All keywords are considered identifiers.
 // To avoid ambiguity in their distinguishment, we use the kw<> function.
 kw<term> { @specialize[@name={term}]<IDENTIFIER, term> }
 
-BOOL_LITERAL
-{
-    kw<"true"> |
-    kw<"false">
+
+
+@precedence {
+  match_expr @left
+  array_initialization @left
+  primary @left
+  struct_initialization @left
+  direct_member_access @left
+  subscript @left
+  call @left
+  cast @left
+  unary @right
+  factor @left
+  term @left
+  comparison @left
+  equality @left
+  and @left
+  xor @left
+  or @left
+  ternary @right
+  assign @right
 }
 
-TYPE_LITERAL
-{
-    kw<"int"> |
-    kw<"float"> |
-    kw<"bool"> |
-    kw<"str"> |
-    kw<"void">
+@top Program {
+  maybe_top_level_stmts
 }
 
-
-
-@precedence
-{
-    match_expr @left
-    array_initialization @left
-    primary @left
-    struct_initialization @left
-    direct_member_access @left
-    subscript @left
-    call @left
-    cast @left
-    unary @right
-    factor @left
-    term @left
-    comparison @left
-    equality @left
-    and @left
-    xor @left
-    or @left
-    ternary @right
-    assign @right
+maybe_top_level_stmts {
+  top_level_stmts?
 }
 
-@top Program
-{
-    maybe_stmts
+top_level_stmts {
+  Top_level_stmt |
+  top_level_stmts Top_level_stmt 
 }
 
-maybe_stmts
-{
-    stmts?
+Top_level_stmt {
+  Func |
+  Struct_decl |
+  Stmt
 }
 
-stmts 
-{
-    Stmt |
-    stmts Stmt
+Stmt {
+  Decl_stmt |
+  If_stmt |
+  Const_stmt |
+  Print_stmt |
+  Block |
+  While_stmt |
+  For_stmt |
+  Return_stmt |
+  Break_stmt |
+  Continue_stmt |
+  Expr_stmt |
+  Type_stmt
 }
 
-Stmt
-{
-    Func |
-    Struct_decl SEMICOLON |
-    Block_valid_stmt
+Struct_decl {
+  kw<"struct"> IDENTIFIER LBRACE maybe_member_decls RBRACE SEMICOLON
 }
 
-Block_valid_stmt
-{
-    Decl_stmt |
-    If_stmt |
-    Const_stmt |
-    Print_stmt |
-    Block |
-    While_stmt |
-    For_stmt |
-    Return_stmt |
-    Break_stmt |
-    Continue_stmt |
-    Expr_stmt |
-    Type_stmt
+maybe_member_decls {
+  member_decls?
 }
 
-Struct_decl
-{
-    kw<"struct"> IDENTIFIER LBRACE maybe_field_map RBRACE
+member_decls {
+  member_decl |
+  member_decls member_decl
 }
 
-maybe_field_map
-{
-    field_map? |
-    field_map COMMA
+member_decl {
+  Func |
+  Prop_decl
 }
 
-field_map 
-{
-    Field_member |
-    field_map COMMA Field_member
+Prop_decl {
+   IDENTIFIER COLON Type_identifier SEMICOLON
 }
 
-Field_member
-{
-    IDENTIFIER COLON Type_identifier
+Decl_stmt {
+  kw<"var"> IDENTIFIER EQUAL Expr SEMICOLON |
+  kw<"var"> IDENTIFIER COLON Type_identifier EQUAL Expr SEMICOLON
 }
 
-Type_identifier
-{
-    IDENTIFIER |
-    TYPE_LITERAL |
-    Type_identifier LBRACKET RBRACKET
+Const_stmt {
+  kw<"const"> IDENTIFIER EQUAL Expr SEMICOLON |
+  kw<"const"> IDENTIFIER COLON Type_identifier EQUAL Expr SEMICOLON
 }
 
-Decl_stmt
-{
-    kw<"var"> IDENTIFIER EQUAL Expr SEMICOLON |
-    kw<"var"> IDENTIFIER COLON Type_identifier EQUAL Expr SEMICOLON
+If_stmt {
+  kw<"if"> Expr Block |
+  kw<"if"> Expr Block kw<"else"> Block |
+  kw<"if"> Expr Block kw<"else"> If_stmt
 }
 
-If_stmt
-{
-    kw<"if"> Expr Block |
-    kw<"if"> Expr Block kw<"else"> Block |
-    kw<"if"> Expr Block kw<"else"> If_stmt
+While_stmt {
+  kw<"while"> Expr Block
 }
 
-Const_stmt
-{
-    kw<"const"> IDENTIFIER EQUAL Expr SEMICOLON |
-    kw<"const"> IDENTIFIER COLON Type_identifier EQUAL Expr SEMICOLON
+For_stmt {
+  kw<"for"> maybe_stmt maybe_expr SEMICOLON maybe_expr Block
 }
 
-Print_stmt
-{
-    kw<"print"> arg_list SEMICOLON
+Print_stmt {
+  kw<"print"> arg_list SEMICOLON
 }
 
-Block
-{
-    LBRACE maybe_block_valid_stmts RBRACE
+Block {
+  LBRACE maybe_stmts RBRACE
 }
 
-maybe_block_valid_stmts
-{
-    block_valid_stmts?
+maybe_stmts {
+  stmts?
 }
 
-block_valid_stmts
-{
-    Block_valid_stmt |
-    block_valid_stmts Block_valid_stmt
+stmts {
+  Stmt |
+  stmts Stmt
 }
 
-Func
-{
-    kw<"fn"> IDENTIFIER LPAREN maybe_param_list RPAREN Return_type Block
+Func {
+  kw<"fn"> IDENTIFIER LPAREN maybe_param_list RPAREN return_type Block
 }
 
-While_stmt
-{
-    kw<"while"> Expr Block
+maybe_stmt {
+  SEMICOLON |
+  Stmt
 }
 
-For_stmt
-{
-    kw<"for"> maybe_block_valid_stmt maybe_expr SEMICOLON maybe_expr Block
+maybe_expr {
+  Expr?
 }
 
-maybe_block_valid_stmt
-{
-    SEMICOLON |
-    Block_valid_stmt
+Return_stmt {
+  kw<"return"> SEMICOLON |
+  kw<"return"> Expr SEMICOLON
 }
 
-maybe_expr
-{
-    Expr?
-}
-
-Return_stmt
-{
-    kw<"return"> SEMICOLON |
-    kw<"return"> Expr SEMICOLON
-}
-
-Break_stmt
-{
+Break_stmt {
    kw<"break"> SEMICOLON
 }
 
-Continue_stmt
-{
+Continue_stmt {
    kw<"continue"> SEMICOLON
 }
 
-Expr_stmt
-{
-    Expr SEMICOLON
+Expr_stmt {
+  Expr SEMICOLON
 }
 
-Type_stmt
-{
-    kw<"type"> IDENTIFIER EQUAL Type_identifier SEMICOLON
+Type_stmt {
+  kw<"type"> IDENTIFIER EQUAL Type_identifier SEMICOLON
 }
 
-maybe_arg_list
-{
-    arg_list?
+maybe_arg_list {
+  arg_list?
 }
 
-arg_list
-{
-    Expr |
-    arg_list COMMA Expr
+arg_list {
+  Expr |
+  arg_list COMMA Expr
 }
 
-maybe_param_list    
-{
-    param_list?
+maybe_param_list   {
+  param_list?
 }
 
-param_list
-{
-    Param |
-    param_list COMMA Param
+param_list {
+  param |
+  param_list COMMA param
 }
 
-Param
-{
-    IDENTIFIER COLON Type_identifier
+param {
+  IDENTIFIER COLON Type_identifier
 }
 
-Return_type
-{
-    (ARROW Type_identifier)?
+return_type {
+  (ARROW Type_identifier)?
 }
 
-Expr
-{
-    Assign_expr |
-    Ternary_expr |
-    Unary_expr |
-    Type_cast |
-    Call_expr |
-    Subscript_expr |
-    Index_assign |
-    Direct_member_access |
-    Struct_initialization |
-    Array_initialization |
-    Match |
-    Primary |
-    Binary_expr |
-    Grouping
+Expr {
+  Assign_expr |
+  Ternary_expr |
+  Binary_expr | // Contains equality_expr, comparison_expr, term_expr, factor_expr, and_expr, xor_expr, or_expr
+  Unary_expr |
+  Type_cast |
+  Call_expr |
+  Method_call |
+  Subscript_expr |
+  Index_assign |
+  Direct_member_access |
+  Struct_initialization |
+  Array_initialization |
+  Match |
+  Primary |
+  Grouping
 }
 
-Assign_expr
-{
-    Primary !assign ASSIGN_OP Expr
+Assign_expr {
+  Primary !assign ASSIGN_OP Expr |
+  Direct_member_access !assign ASSIGN_OP Expr
 }
 
-Index_assign
-{
-    Subscript_expr !assign ASSIGN_OP Expr
+Index_assign {
+  Subscript_expr !assign ASSIGN_OP Expr
 }
 
-Type_cast
-{
-    Expr kw<"as"> !cast Type_identifier
+Type_cast {
+  Expr kw<"as"> !cast Type_identifier
 }
 
-Ternary_expr
-{
-    Expr QUESTION Expr COLON !ternary Expr
+Ternary_expr {
+  Expr QUESTION Expr COLON !ternary Expr
 }
 
-Unary_expr
-{
-    PREFIX_UNARY_OP !unary Expr
+Binary_expr {
+  equality_expr |
+  comparison_expr |
+  term_expr |
+  factor_expr |
+  and_expr |
+  xor_expr |
+  or_expr
 }
 
-equality_expr
-{
-    Expr EQUALITY_OP !equality Expr
+equality_expr {
+  Expr EQUALITY_OP !equality Expr
 }
 
-comparison_expr
-{
-    Expr COMPARISON_OP !comparison Expr
+comparison_expr {
+  Expr COMPARISON_OP !comparison Expr
 }
 
-term_expr
-{
-    Expr TERM_OP !term Expr
+term_expr {
+  Expr TERM_OP !term Expr
 }
 
-factor_expr
-{
-    Expr FACTOR_OP !factor Expr
+factor_expr {
+  Expr FACTOR_OP !factor Expr
 }
 
-and_expr
-{
-    Expr kw<"and"> !and Expr
+and_expr {
+  Expr kw<"and"> !and Expr
 }
 
-xor_expr
-{
-    Expr kw<"xor"> !xor Expr
+xor_expr {
+  Expr kw<"xor"> !xor Expr
 }
 
-or_expr
-{
-    Expr kw<"or"> !or Expr
+or_expr {
+  Expr kw<"or"> !or Expr
 }
 
-Call_expr
-{
-    Expr LPAREN maybe_arg_list !call RPAREN
+Unary_expr {
+  PREFIX_UNARY_OP !unary Expr
 }
 
-Struct_initialization
-{
-    IDENTIFIER !struct_initialization LBRACE Maybe_struct_initialization_list RBRACE
+Call_expr {
+  IDENTIFIER LPAREN maybe_arg_list !call RPAREN
 }
 
-Maybe_struct_initialization_list
-{
-    Struct_initialization_list? |
-    Struct_initialization_list COMMA
+Struct_initialization {
+  IDENTIFIER !struct_initialization LBRACE maybe_struct_initialization_list RBRACE
 }
 
-Struct_initialization_list
-{
-    IDENTIFIER EQUAL Expr |
-    Struct_initialization_list COMMA IDENTIFIER EQUAL Expr
+maybe_struct_initialization_list {
+  struct_initialization_list? |
+  struct_initialization_list COMMA
 }
 
-Array_initialization
-{
-    LBRACKET maybe_arg_list !array_initialization RBRACKET
+struct_initialization_list {
+  IDENTIFIER EQUAL Expr |
+  struct_initialization_list COMMA IDENTIFIER EQUAL Expr
 }
 
-Subscript_expr
-{
-    Expr LBRACKET Expr !subscript RBRACKET
+Array_initialization {
+  LBRACKET maybe_arg_list !array_initialization RBRACKET
 }
 
-Direct_member_access
-{
-    Expr DOT !subscript IDENTIFIER
+Subscript_expr {
+  Expr LBRACKET Expr !subscript RBRACKET
 }
 
-Match
-{
-    kw<"match"> Expr LBRACKET Maybe_match_arms Match_else_arm !match_expr RBRACKET
+Direct_member_access {
+  Expr DOT !subscript IDENTIFIER
 }
 
-Maybe_match_arms
-{
-    Match_arms? |
-    Match_arms COMMA
+Method_call {
+  Expr DOT !call Call_expr
 }
 
-Match_arms
-{
-    Expr FAT_ARROW Expr |
-    Match_arms COMMA Expr FAT_ARROW Expr
+Match {
+  kw<"match"> Expr LBRACE maybe_match_arms match_else_arm !match_expr RBRACE
 }
 
-Match_else_arm
-{
-    kw<"else"> FAT_ARROW Expr
+maybe_match_arms {
+  match_arms? |
+  match_arms COMMA
 }
 
-Primary
-{
-    IDENTIFIER !primary |
-    INT_LITERAL |
-    FLOAT_LITERAL |
-    BOOL_LITERAL |
-    STR_LITERAL
+match_arms {
+  Expr FAT_ARROW Expr |
+  match_arms COMMA Expr FAT_ARROW Expr
 }
 
-Binary_expr
-{
-    equality_expr |
-    comparison_expr |
-    term_expr |
-    factor_expr |
-    and_expr |
-    xor_expr |
-    or_expr
+match_else_arm {
+  kw<"else"> FAT_ARROW Expr
 }
 
-Grouping
-{
+Primary {
+  IDENTIFIER !primary |
+  kw<"self"> |
+  INT_LITERAL |
+  FLOAT_LITERAL |
+  kw<"true"> |
+  kw<"false"> |
+  STR_LITERAL
+}
+
+Grouping {
    LPAREN Expr RPAREN 
 }
 
-ASSIGN_OP
-{
-    EQUAL |
-    PLUS_EQUAL |
-    MINUS_EQUAL |
-    STAR_EQUAL |
-    SLASH_EQUAL |
-    PERCENT_EQUAL
+ASSIGN_OP {
+  EQUAL |
+  PLUS_EQUAL |
+  MINUS_EQUAL |
+  STAR_EQUAL |
+  SLASH_EQUAL |
+  PERCENT_EQUAL
 }
 
-EQUALITY_OP
-{
-    EQUAL_EQUAL |
-    BANG_EQUAL
+EQUALITY_OP {
+  EQUAL_EQUAL |
+  BANG_EQUAL
 }
 
-COMPARISON_OP
-{
-    GREATER |
-    GREATER_EQUAL |
-    LESS |
-    LESS_EQUAL
+COMPARISON_OP {
+  GREATER |
+  GREATER_EQUAL |
+  LESS |
+  LESS_EQUAL
 }
 
-FACTOR_OP
-{
-    STAR |
-    SLASH |
-    PERCENT
+FACTOR_OP {
+  STAR |
+  SLASH |
+  PERCENT
 }
 
-TERM_OP
-{
-    MINUS |
-    PLUS
+TERM_OP {
+  PLUS |
+  MINUS
 }
 
-PREFIX_UNARY_OP
-{
-    kw<"not"> |
-    MINUS
+PREFIX_UNARY_OP {
+  MINUS |
+  kw<"not">
+}
+
+Type_identifier {
+  IDENTIFIER |
+  kw<"int"> |
+  kw<"float"> |
+  kw<"bool"> |
+  kw<"str"> |
+  kw<"void"> |
+  Type_identifier LBRACKET RBRACKET
 }
