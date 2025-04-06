@@ -33,7 +33,7 @@
 				]}
 				basic
 				bind:value={$textEditorCode}
-				tabSize={8}
+				tabSize={4}
 				class="col-span-2 *:h-full"
 				styles={{
 					div: {

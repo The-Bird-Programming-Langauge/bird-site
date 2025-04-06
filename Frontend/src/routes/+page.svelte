@@ -143,7 +143,7 @@
 					oneDarkTheme,
 				]}
 				bind:value={$textEditorCode}
-				tabSize={8}
+				tabSize={4}
 				styles={{
 					div: {
 						'font-size': '1.5rem'
