@@ -1,0 +1,8 @@
+struct Dog {
+    fn speak() {
+        print "woof!";
+    }
+};
+
+const max: Dog = Dog {};
+max.speak(); // woof!

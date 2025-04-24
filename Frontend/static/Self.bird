@@ -1,0 +1,14 @@
+struct Complex {
+    float real;
+    float imaginary;
+    fn add(other: Complex) -> Complex {
+        return Complex {
+            real = self.real + other.real,
+            imaginary = self.imaginary + other.imaginary
+        };
+    }
+};
+
+const first = Complex { real = 1.0, imaginary = 2.0 };
+const second = Complex { real = 3.0, imaginary = 4.0 };
+const third = first.add(second);

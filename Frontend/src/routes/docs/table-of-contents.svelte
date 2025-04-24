@@ -50,6 +50,20 @@
 			text: 'Functions',
 			href: '/docs/functions',
 			children: [{ text: 'Function Declaration' }, { text: 'Function Calls' }]
+		},
+		{
+			text: 'Structs',
+			href: '/docs/structs',
+			children: [{ text: 'Self' }, { text: 'Methods' }]
+		},
+		{
+			text: 'Arrays',
+			href: '/docs/arrays',
+			children: [{ text: 'Array functions' }]
+		},
+		{
+			text: 'Builtins',
+			href: '/docs/builtins'
 		}
 	];
 </script>

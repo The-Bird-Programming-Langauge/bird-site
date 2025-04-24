@@ -1,0 +1,5 @@
+const greeting: str = "Hello, World!";
+print length(greeting); // 13
+
+const evens = [2, 4, 6, 8, 10];
+print length(evens); // 5

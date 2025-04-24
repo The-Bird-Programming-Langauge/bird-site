@@ -1,0 +1,7 @@
+struct Garbage {
+    trash: int;
+};
+
+const garbage = Garbage { trash = 42 };
+
+gc(); // garbage cleaned up here

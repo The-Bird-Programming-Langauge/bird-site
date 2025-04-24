@@ -1,0 +1,9 @@
+struct MyStruct {
+    my_char: char;
+    my_int: int;
+};
+
+const items: MyStruct[] = [
+    MyStruct {my_char = 'a', my_int = 1}, 
+    MyStruct {my_char = 'b', my_int = 2}
+];
