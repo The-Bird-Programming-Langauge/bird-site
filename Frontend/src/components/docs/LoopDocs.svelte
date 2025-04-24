@@ -5,12 +5,14 @@
 	import DocsCode from './DocsCode.svelte';
 	import DocsHeader1 from './DocsHeader1.svelte';
 	import DocsHeader3 from './DocsHeader3.svelte';
+	import DocsInlineCode from './DocsInlineCode.svelte';
 	import DocsSection from './DocsSection.svelte';
 	import DocsText from './DocsText.svelte';
 </script>
 
 <Section>
 	<DocsHeader1 id="loops">Loops</DocsHeader1>
+
 	<DocsSection>
 		<DocsHeader3 id="for-loops">For Loops</DocsHeader3>
 		<DocsText
@@ -23,6 +25,7 @@
 			{/await}
 		</DocsCode>
 	</DocsSection>
+
 	<DocsSection>
 		<DocsHeader3 id="while-loops">While Loops</DocsHeader3>
 		<DocsText
@@ -34,6 +37,19 @@
 			{/await}
 		</DocsCode>
 	</DocsSection>
+
+	<DocsSection>
+		<DocsHeader3 id="for-in-loops">For-In Loops</DocsHeader3>
+		<DocsText>
+			The for-in loop in Bird is used to iterate over elements of a collection using the <DocsInlineCode>iter</DocsInlineCode> function. It supports arrays and strings.
+		</DocsText>
+		<DocsCode>
+			{#await getCode('forInLoops') then code}
+				{@html lex(code)}
+			{/await}
+		</DocsCode>
+	</DocsSection>
+
 	<DocsSection>
 		<DocsHeader3 id="continue-and-break">Continue and Break</DocsHeader3>
 		<DocsText

@@ -44,7 +44,12 @@
 		{
 			text: 'Loops',
 			href: '/docs/loops',
-			children: [{ text: 'For Loops' }, { text: 'While Loops' }, { text: 'Continue and Break' }]
+			children: [
+				{ text: 'For Loops' },
+				{ text: 'While Loops' },
+				{ text: 'For-In Loops' },
+				{ text: 'Continue and Break' }
+			]
 		},
 		{
 			text: 'Functions',
@@ -64,6 +69,19 @@
 		{
 			text: 'Builtins',
 			href: '/docs/builtins'
+		},
+		{
+			text: 'Namespaces',
+			href: '/docs/namespaces'
+		},
+		{
+			text: 'Import Statement',
+			href: '/docs/import'
+		},
+		{
+			text: 'Standard Library',
+			href: '/docs/standard-library',
+			children: [{ text: 'Math::Trig' }]
 		}
 	];
 </script>

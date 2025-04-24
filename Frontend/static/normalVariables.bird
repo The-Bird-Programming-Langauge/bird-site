@@ -1,2 +1,2 @@
-// Declare the variable x of type bool and assign it the value true. 
+// Declare the variable x of type bool and assign it the value true.
 var x: bool = true;

@@ -28,7 +28,7 @@
 			<DocsInlineCode>push</DocsInlineCode>
 		</DocsHeader3>
 		<DocsText
-			>The push function allows you to append elemnets of the same type to an array.</DocsText
+			>The push function allows you to append elements of the same type to an array.</DocsText
 		>
 		<DocsCode>
 			{#await getCode('ArrayPush') then code}
@@ -51,7 +51,7 @@
 		<DocsHeader3>
 			<DocsInlineCode>iter</DocsInlineCode>
 		</DocsHeader3>
-		<DocsText>The iter function turns arrays and strings into iterators</DocsText>
+		<DocsText>The iter function turns arrays and strings into iterators.</DocsText>
 		<DocsCode>
 			{#await getCode('iter') then code}
 				{@html lex(code)}

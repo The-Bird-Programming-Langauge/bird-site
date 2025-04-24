@@ -1,0 +1,7 @@
+// Import a single standard library statement
+import Math::Trig::sin
+// Import multiple statements
+import Math::Trig::sin, Math::Trig::cos
+
+// sin is a function residing in the Math::sin namespace
+print Math::Trig::sin(2.0, 1.0);

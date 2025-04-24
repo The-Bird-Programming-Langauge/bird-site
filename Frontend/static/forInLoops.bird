@@ -1,0 +1,11 @@
+// Iterating over an array
+var arr = [1, 2, 3];
+for x in iter(arr) {
+  print x;
+}
+
+// Iterating over a string
+var s = "hello";
+for x in iter(s) {
+  print x;
+}

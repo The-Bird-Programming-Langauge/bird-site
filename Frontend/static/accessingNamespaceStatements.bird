@@ -1,0 +1,11 @@
+namespace X {
+  var a = 2;
+  namespace Y {
+    var b = 3;
+
+    
+  }
+}
+
+print X::a;
+print X::Y::b;

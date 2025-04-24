@@ -1,0 +1,5 @@
+import Math::Trig
+
+// Can call any statement in the Math::Trig namespace
+print Math::Trig::sin(2.0, 1.0);
+print Math::Trig::cos(2.0, 1.0);

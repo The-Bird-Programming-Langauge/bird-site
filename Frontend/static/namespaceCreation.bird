@@ -1,0 +1,10 @@
+namespace X {
+  var a = 2;
+  const b = 3;
+  struct c{};
+  type d = int;
+  fn e() {}
+  namespace Y {
+    var f = 2;
+  }
+}

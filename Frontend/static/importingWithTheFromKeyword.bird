@@ -1,0 +1,2 @@
+// Only Math::Trig::sin and Math::Trig::cos are imported
+import sin, cos from Math::Trig
