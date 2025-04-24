@@ -1,0 +1,13 @@
+struct Person {
+    name: str;
+};
+
+const developers = [
+    Person {name = "Nathan Wright"},
+    Person {name = "Aidan Kirk"},
+    Person {name = "Nicholas Langley"}
+];
+
+push(developers, Person {name = "Cole Carley"});
+
+print developers[3].name; // Cole Carley

@@ -1,0 +1,2 @@
+const words: str[] = ["Hello", "World!"];
+print words[0] + ", " + words[1];

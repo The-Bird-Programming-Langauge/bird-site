@@ -1,0 +1,7 @@
+for element in iter([1,2,3]) {
+    print element;
+}
+
+for c in iter("hello there") {
+    print c;
+}

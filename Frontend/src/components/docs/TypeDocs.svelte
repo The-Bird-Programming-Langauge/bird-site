@@ -4,7 +4,6 @@
 	import Section from '../section.svelte';
 	import DocsCode from './DocsCode.svelte';
 	import DocsHeader1 from './DocsHeader1.svelte';
-	import DocsHeader2 from './DocsHeader2.svelte';
 	import DocsHeader3 from './DocsHeader3.svelte';
 	import DocsInlineCode from './DocsInlineCode.svelte';
 	import DocsSection from './DocsSection.svelte';
@@ -21,6 +20,7 @@
 			<DocsInlineCode>bool</DocsInlineCode>,
 			<DocsInlineCode>float</DocsInlineCode>,
 			<DocsInlineCode>str</DocsInlineCode>.
+			<DocsInlineCode>char</DocsInlineCode>.
 		</DocsText>
 		<DocsCode>
 			{#await getCode('primitiveTypes') then code}
@@ -33,6 +33,15 @@
 		<DocsText>You can create a type identifier to represent a primitive type.</DocsText>
 		<DocsCode>
 			{#await getCode('typeDeclaration') then code}
+				{@html lex(code)}
+			{/await}
+		</DocsCode>
+	</DocsSection>
+	<DocsSection>
+		<DocsHeader3 id="aggregate-types">Aggregate types</DocsHeader3>
+		<DocsText>Bird supports both structs and arrays</DocsText>
+		<DocsCode>
+			{#await getCode('aggregateTypes') then code}
 				{@html lex(code)}
 			{/await}
 		</DocsCode>

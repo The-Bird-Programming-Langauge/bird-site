@@ -1,0 +1,5 @@
+const p = Person {
+    name: "John McCarthy"
+};
+print p.name; // John McCarthy
+print p.age; // 0
