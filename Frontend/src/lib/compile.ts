@@ -91,24 +91,26 @@ export async function uploadWasm(code: Uint8Array | ArrayBuffer) {
         );
     }
 }
+
 class Printer {
+    private currentLine = "";
+
     print_i32(value: number) {
-        console.log(value);
-        consoleOutput.update(old => [...old, value.toString()]);
+        this.currentLine += value.toString();
     }
+
     print_char(value: number) {
-        const char = String.fromCharCode(value);
-        console.log(char);
-        consoleOutput.update(old => [...old, char]);
+        this.currentLine += String.fromCharCode(value);
     }
+
     print_f64(value: number) {
-        console.log(value);
-        consoleOutput.update(old => [...old, value.toString()]);
+        this.currentLine += value.toString();
     }
+
     print_bool(value: number) {
-        console.log(!!value);
-        consoleOutput.update(old => [...old, (!!value).toString()]);
+        this.currentLine += value === 1 ? "true" : "false";
     }
+
     print_str(ptr: number) {
         const ref = mem.get(ptr);
         const array_ptr = mem.get(ref.get_32(0));
@@ -120,13 +122,16 @@ class Printer {
             str += String.fromCharCode(data.get_32(i * 4));
         }
 
-        consoleOutput.update(old => [...old, str]);
-        console.log(str)
+        this.currentLine += str;
     }
+
     print_endline() {
-        console.log();
+        if (this.currentLine.length > 0) {
+            consoleOutput.update(old => [...old, this.currentLine]);
+            this.currentLine = "";
+        }
     }
-};
+}
 
 class Block {
     static SIZE_OFFSET = 4;
@@ -410,6 +415,7 @@ const moduleOptions = {
         push_64,
         strcat,
         strcmp,
+        str_to_array,
         print_i32: (value: number) => printer.print_i32(value),
         print_char: (value: number) => printer.print_char(value),
         print_f64: (value: number) => printer.print_f64(value),
@@ -436,6 +442,10 @@ const moduleOptions = {
         },
     }
 };
+
+function str_to_array(str_ptr: number) {
+    return str_ptr;
+}
 
 function push_ptr(arr_ptr: number, value: number) {
     const ref = mem.get(arr_ptr);
@@ -480,7 +490,7 @@ function push_64(arr_ptr: number, value: number) {
     const length = array.get_32(4);
     const capacity = (data.get_size() - Block.BLOCK_HEADER_SIZE) / 8;
 
-    if (capacity + 1 >= length) {
+    if (length + 1 >= capacity) {
         const new_data = mem.get(mem.alloc(Math.max(length * 2 * 8, Block.BLOCK_HEADER_SIZE * 4), 0));
         for (let i = 0; i < length; i++) {
             new_data.set_64(i * 8, data.get_64(i * 8));
