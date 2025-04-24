@@ -327,6 +327,9 @@ export const syntax_linter = linter((context: EditorView) => {
       previous_node = cursor.node.cursor();
     } else if (cursor.name === "SEMICOLON") {
       previous_node = cursor.node.cursor();
+    // TODO: Implement for-in loop logic.
+    } else if (cursor.name === "IDENTIFIER") {
+      return;
     } else {
       if (expect_token(["Stmt", "SEMICOLON"], "statement or ';'", cursor, previous_node)) return;
     }

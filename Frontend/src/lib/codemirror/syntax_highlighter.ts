@@ -30,8 +30,8 @@ export const syntax_highlighter = syntaxHighlighting(HighlightStyle.define([
 // Assigns tags to the objects created in the parser.
 // Tags of the same type are colored the same.
 export const taggedSyntax = styleTags({
-  "if else print while for return break continue match": t.keyword,
-  "var const type fn struct self": t.definitionKeyword,
+  "if else print while for in return break continue match import from": t.keyword,
+  "var const type fn struct self namespace": t.definitionKeyword,
 
   "int float bool str void": t.typeName,
   "Type_identifier/IDENTIFIER": t.typeName,
@@ -45,6 +45,7 @@ export const taggedSyntax = styleTags({
   SEMICOLON: t.operator,
   ARROW: t.operator,
   FAT_ARROW: t.operator,
+  COLON_COLON: t.operator,
   MINUS: t.operator,
   PLUS: t.operator,
   STAR: t.operator,

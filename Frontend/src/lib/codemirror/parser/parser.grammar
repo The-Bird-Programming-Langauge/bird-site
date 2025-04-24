@@ -19,6 +19,7 @@
   RBRACE { "}" }
   LBRACKET { "[" }
   RBRACKET { "]" }
+  COLON_COLON { "::" }
   
   // Assignment operators: ASSIGN_OP
   EQUAL { "=" }
@@ -84,6 +85,7 @@ kw<term> { @specialize[@name={term}]<IDENTIFIER, term> }
 
 
 @precedence {
+  scope_resolution_expr @left
   match_expr @left
   array_initialization @left
   primary @left
@@ -133,9 +135,37 @@ Stmt {
   For_stmt |
   Return_stmt |
   Break_stmt |
+  Namespace_stmt |
   Continue_stmt |
   Expr_stmt |
-  Type_stmt
+  Type_stmt |
+  Import_stmt
+}
+
+maybe_namespace_stmts {
+  namespace_declaration_stmts?
+}
+
+namespace_declaration_stmts {
+  namespace_declaration_stmt |
+  namespace_declaration_stmts namespace_declaration_stmt 
+}
+
+namespace_declaration_stmt {
+  Namespace_stmt |
+  Decl_stmt |
+  Const_stmt |
+  Struct_decl |
+  Type_stmt |
+  Func
+}
+
+Namespace_stmt {
+  kw<"namespace"> IDENTIFIER LBRACE maybe_namespace_stmts RBRACE
+}
+
+Scope_resolution {
+  IDENTIFIER COLON_COLON !match_expr Expr
 }
 
 Struct_decl {
@@ -181,7 +211,8 @@ While_stmt {
 }
 
 For_stmt {
-  kw<"for"> maybe_stmt maybe_expr SEMICOLON maybe_expr Block
+  kw<"for"> maybe_stmt maybe_expr SEMICOLON maybe_expr Block |
+  kw<"for"> IDENTIFIER kw<"in"> Expr Block
 }
 
 Print_stmt {
@@ -235,6 +266,21 @@ Type_stmt {
   kw<"type"> IDENTIFIER EQUAL Type_identifier SEMICOLON
 }
 
+Import_stmt {
+  kw<"import"> import_path_list |
+  kw<"import"> import_path_list kw<"from"> import_path
+}
+
+import_path_list {
+  import_path |
+  import_path_list COMMA import_path
+}
+
+import_path {
+  IDENTIFIER |
+  import_path COLON_COLON IDENTIFIER
+}
+
 maybe_arg_list {
   arg_list?
 }
@@ -275,6 +321,7 @@ Expr {
   Struct_initialization |
   Array_initialization |
   Match |
+  Scope_resolution |
   Primary |
   Grouping
 }

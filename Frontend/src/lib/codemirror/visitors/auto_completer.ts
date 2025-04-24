@@ -40,6 +40,7 @@ export function get_auto_completions(context: CompletionContext) {
       {label: "print", type: "keyword"},
       {label: "while", type: "keyword"},
       {label: "for", type: "keyword"},
+      {label: "in", type: "keyword"},
       {label: "return", type: "keyword"},
       {label: "break", type: "keyword"},
       {label: "continue", type: "keyword"},
@@ -49,6 +50,9 @@ export function get_auto_completions(context: CompletionContext) {
       {label: "type", type: "keyword"},
       {label: "fn", type: "keyword"},
       {label: "struct", type: "keyword"},
+      {label: "namespace", type: "keyword"},
+      {label: "import", type: "keyword"},
+      {label: "from", type: "keyword"},
 
       {label: "int", type: "type"},
       {label: "float", type: "type"},

@@ -4,9 +4,9 @@ export function lex(birdCode: string): string {
     const lexer = moo.compile({
         gray: [/\/\/.*?$/, /\/\*[\s\S]*?\*\//],
         white: { match: [" ", "\n", "\t", "+", "-", "*", "/", "%", "=", "+=", "-=", "*=", "/=", "%=", "->", "==", "!=", ">", "<", ">=", "<=", ";", ".", ",", ":", "?"], lineBreaks: true },
-        darkBlue: ['var', 'const', 'type', 'true', 'false', "fn", "struct"],
+        darkBlue: ['var', 'const', 'type', 'true', 'false', "fn", "struct", "namespace"],
         green: ['int', 'bool', 'float', 'str', 'void', 'char'],
-        purple: ["if", "else", "while", "for", "return", "match", "print"],
+        purple: ["if", "else", "while", "for", "return", "match", "print", "import", "from", "in"],
         orange: ['(', ')', '{', '}', '[', ']'],
         orange2: [/".*?"/, /'.*?'/, /"/],
         yellow: /0|[1-9]\d*/,
