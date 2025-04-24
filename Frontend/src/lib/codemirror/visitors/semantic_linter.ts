@@ -20,6 +20,11 @@ export const semantic_linter = linter((context: EditorView) => {
   let function_depth = 0;
   let in_method = false;
 
+  call_table.declare("length", new SemanticCallable());
+  call_table.declare("push", new SemanticCallable());
+  call_table.declare("gc", new SemanticCallable());
+  call_table.declare("iter", new SemanticCallable());
+
   const cursor: TreeCursor = syntaxTree(context.state).cursor();
   visit_program(cursor.node.cursor());
 
@@ -414,7 +419,7 @@ export const semantic_linter = linter((context: EditorView) => {
         message: `Identifier '${identifier_text}' is already declared.`,
       });
     } else {
-      call_table.declare(identifier_text, new SemanticType());
+      type_table.declare(identifier_text, new SemanticType());
     }
   }
 
