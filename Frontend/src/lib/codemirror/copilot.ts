@@ -1,11 +1,16 @@
 import { inlineCopilot } from "codemirror-copilot";
 import { CohereClientV2 } from "cohere-ai";
 
+/**
+ * This is not currently being used due to request rate limits
+ * it can be added to the codemirror extensions in the future
+ */
+
 export const copilot = inlineCopilot(async (prefix, suffix) => {
   const cohere = new CohereClientV2({
     token: "docaDTWtZ6jRfZuQwIaX52wSygzp1F1WapqncexV",
   });
-  
+
   try {
     const response = await cohere.chat({
       model: "command-a-03-2025",

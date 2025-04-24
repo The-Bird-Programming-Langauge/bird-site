@@ -9,16 +9,15 @@ import { syntax_highlighter } from "$lib/codemirror/syntax_highlighter.js";
 import { auto_completer } from "$lib/codemirror/visitors/auto_completer.js";
 import { semantic_linter } from "$lib/codemirror/visitors/semantic_linter.js";
 import { syntax_linter } from "$lib/codemirror/visitors/syntax_linter.js";
-import { copilot } from "$lib/codemirror/copilot.js";
 
 // Returns a list of extensions that are acceptable by codemirror.
 // Extensions add features to codemirror.
 export function get_extensions() {
   const key_map_extensions = Prec.highest(
-		keymap.of([
-			{ key: "Tab", run: acceptCompletion }, // Make the tab key the tab completion keybind.
-		])
-	);
+    keymap.of([
+      { key: "Tab", run: acceptCompletion }, // Make the tab key the tab completion keybind.
+    ])
+  );
 
   const language_support = new LanguageSupport(
     LRLanguage.define({
@@ -33,7 +32,6 @@ export function get_extensions() {
     auto_completer, // Apply auto completions based on the current word being typed.
     semantic_linter, // Apply semantic linter errors.
     syntax_linter, // Apply syntax linter warnings for malformed syntax.
-    copilot, // Add AI tab completion copilot suggestions based on the coding context.
   ]
 }
 
