@@ -1,5 +1,0 @@
-struct Triangle {
-  a: float;
-  b: float;
-  c: float;
-};
