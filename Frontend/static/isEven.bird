@@ -4,7 +4,7 @@ Write a function that takes in an int and returns true if it's even and false if
 
 fn is_even(n: int) -> bool {
     // write code here!!
-    return n % 2 == 0;
+    return false;
 }
 
 /* --------------------------------------------- TESTS ------------------------------------------- */
