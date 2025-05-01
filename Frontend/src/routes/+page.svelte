@@ -179,7 +179,7 @@
 						{ value: 'factorial', name: 'Factorial' },
 						{ value: '3or5', name: 'Challenge: 3 or 5' },
 						{ value: 'climbingStairs', name: 'Challenge: Climbing Stairs' },
-						{ value: 'inorderSearch', name: 'Challenge: Inorder Search' }
+						{ value: 'preorderSearch', name: 'Challenge: Preorder Search' }
 					]}
 					onchange={async (ev: Event & { currentTarget: EventTarget & HTMLSelectElement }) => {
 						textEditorCode.set(await getCode(ev.currentTarget.value));
