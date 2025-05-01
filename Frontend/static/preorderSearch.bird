@@ -1,0 +1,102 @@
+/* --------------------------------------------------- CHALLENGE ------------------------------------- 
+Implement a binary tree preorder search that returns
+an array of values.
+----------------------------------------------------------------------------------------------------------- */
+
+struct Node {
+    val: int;
+    left: Node;
+    right: Node;
+};
+
+struct Tree {
+    root: Node;
+    fn preorder(tree: Node, result: int[]) -> void {
+        // write code here!!!
+    }
+    fn helper() -> int[] {
+        const result: int[] = [];
+        self.preorder(self.root, result);
+        return result;
+    }
+};
+
+/* --------------------------------------------- TESTS ------------------------------------------- */
+fn compare(x: int[], y: int[]) -> bool {
+    if (length(x) != length(y)) {
+        return false;
+    }
+
+    for var i = 0; i < length(x); i += 1 {
+        if (x[i] != y[i]) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+struct Answer {
+    name: str;
+    input: Tree;
+    output: int[];
+};
+
+fn test() {
+    const empty_tree: Tree = Tree {};
+    const empty: Answer = Answer {
+        name = "empty",
+        input = empty_tree,
+        output = [] as int[]
+    };
+
+    const normal_tree: Tree = Tree {
+        root = Node {
+            val = 1,
+            left = Node {
+                val = 2,
+            },
+            right = Node {
+                val = 3
+            },
+        }
+    };
+    const normal: Answer = Answer {
+        name = "normal",
+        input = normal_tree,
+        output = [1,2,3]
+    };
+
+    const uneven_tree: Tree = Tree {
+        root = Node {
+            val = 1,
+            left = Node {
+                val = 2,
+                left = Node {
+                    val = 3,
+                    left = Node {
+                        val = 4
+                    },
+                },
+            },
+            right = Node {
+                val = 5,
+            },
+        }
+    };
+    const uneven: Answer = Answer {
+        name = "uneven",
+        input = uneven_tree,
+        output = [1,2,3,4,5]
+    };
+
+    const cases: Answer[] = [empty, normal, uneven];
+
+    for case in iter(cases) {
+        print case.name + ": " +  (compare(case.input.helper(), case.output) ? "passed" : "FAILED");
+    }
+
+    print "done!";
+}
+
+test();

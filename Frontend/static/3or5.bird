@@ -1,0 +1,32 @@
+/* --------------------------------------------------- CHALLENGE ------------------------------------- 
+Return the sum of all the numbers below n that are multiples of 3 or 5
+----------------------------------------------------------------------------------------------------------- */
+
+fn sum_of_3_or_5(n: int) -> int {
+    // write code here!!
+    return 0;
+}
+
+/* --------------------------------------------- TESTS ------------------------------------------- */
+struct Answer {
+    name: str;
+    input: int;
+    output: int;
+};
+
+fn test() {
+    const cases: Answer[] = [
+        Answer {name = "0", input = 0, output = 0},
+        Answer {name = "10", input = 10, output = 23},
+        Answer {name = "large", input = 1000, output = 233168},
+        Answer {name = "larger", input = 10000, output = 23331668},
+    ];
+
+    for case in iter(cases) {
+        print case.name + ": " + (sum_of_3_or_5(case.input) == case.output ? "passed" : "FAILED");
+    }
+
+    print "done!";
+}
+
+test();

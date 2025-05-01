@@ -51,7 +51,7 @@
 			basic
 			bind:value={$textEditorCode}
 			tabSize={4}
-			class="col-span-2"
+			class="col-span-2 flex w-full  *:w-full"
 			styles={{
 				div: {
 					'font-size': '1rem'
@@ -70,7 +70,7 @@
 				<div class="h-full">
 					{#each $consoleOutput as line}
 						<div class="m-0 whitespace-pre p-4">
-							<p class="text-color-on-dark text-xl">{line}</p>
+							<p class="text-color-on-dark">{line}</p>
 						</div>
 					{/each}
 				</div>

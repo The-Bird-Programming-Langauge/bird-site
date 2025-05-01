@@ -5,7 +5,7 @@
 	import { getCode } from '$lib/getCode';
 	import { lex } from '$lib/lex';
 	import { textEditorCode } from '$lib/text-editor-code';
-	import { get_extensions } from '$lib/codemirror/codemirror_helpers'
+	import { get_extensions } from '$lib/codemirror/codemirror_helpers';
 	import { oneDarkTheme } from '@codemirror/theme-one-dark';
 	import { Label, Select } from 'flowbite-svelte';
 	import { onDestroy, onMount } from 'svelte';
@@ -140,7 +140,7 @@
 			<CodeMirror
 				extensions={[
 					...get_extensions(), // Apply extensions for additional functionality like syntax highlighting.
-					oneDarkTheme,
+					oneDarkTheme
 				]}
 				bind:value={$textEditorCode}
 				tabSize={4}
@@ -176,7 +176,10 @@
 					items={[
 						{ value: 'helloWorld', name: 'Hello, World!' },
 						{ value: 'fibonacci', name: 'Fibonacci' },
-						{ value: 'factorial', name: 'Factorial' }
+						{ value: 'factorial', name: 'Factorial' },
+						{ value: '3or5', name: 'Challenge: 3 or 5' },
+						{ value: 'climbingStairs', name: 'Challenge: Climbing Stairs' },
+						{ value: 'preorderSearch', name: 'Challenge: Preorder Search' }
 					]}
 					onchange={async (ev: Event & { currentTarget: EventTarget & HTMLSelectElement }) => {
 						textEditorCode.set(await getCode(ev.currentTarget.value));
