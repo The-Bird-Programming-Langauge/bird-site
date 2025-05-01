@@ -182,12 +182,16 @@ export const syntax_linter = linter((context: EditorView) => {
       visit_return_stmt(cursor.node.cursor());
     } else if (cursor.name === "Break_stmt") {
       visit_break_stmt(cursor.node.cursor());
+    } else if (cursor.name === "Namespace_stmt") {
+      visit_namespace_stmt(cursor.node.cursor());
     } else if (cursor.name === "Continue_stmt") {
       visit_continue_stmt(cursor.node.cursor());
     } else if (cursor.name === "Expr_stmt") {
       visit_expr_stmt(cursor.node.cursor());
     } else if (cursor.name === "Type_stmt") {
       visit_type_stmt(cursor.node.cursor());
+    } else if (cursor.name === "Import_stmt") {
+      visit_import_stmt(cursor.node.cursor());
     }
   }
 
@@ -317,6 +321,7 @@ export const syntax_linter = linter((context: EditorView) => {
     visit_block(cursor.node.cursor());
   }
   
+  // kw<"for"> IDENTIFIER kw<"in"> Expr Block
   function visit_for_stmt(cursor: TreeCursor) {
     if (!cursor.firstChild()) return; // for
     let previous_node = cursor.node.cursor();
@@ -327,11 +332,23 @@ export const syntax_linter = linter((context: EditorView) => {
       previous_node = cursor.node.cursor();
     } else if (cursor.name === "SEMICOLON") {
       previous_node = cursor.node.cursor();
-    // TODO: Implement for-in loop logic.
     } else if (cursor.name === "IDENTIFIER") {
+      previous_node = cursor.node.cursor();
+
+      if (!cursor.nextSibling()) return;
+      if (expect_token("in", "'in'", cursor, previous_node)) return;
+      previous_node = cursor.node.cursor();
+
+      if (!cursor.nextSibling()) return;
+      if (expect_token("Expr", "expression", cursor, previous_node)) return;
+      visit_expr(cursor.node.cursor());
+      previous_node = cursor.node.cursor();
+
+      if (!cursor.nextSibling()) return;
+      if (expect_token("Block", "block", cursor, previous_node)) return;
       return;
     } else {
-      if (expect_token(["Stmt", "SEMICOLON"], "statement or ';'", cursor, previous_node)) return;
+      if (expect_token(["Stmt", "SEMICOLON", "IDENTIFIER"], "statement or ';' or identifier", cursor, previous_node)) return;
     }
 
     if (!cursor.nextSibling()) return;
@@ -418,6 +435,46 @@ export const syntax_linter = linter((context: EditorView) => {
     if (!cursor.nextSibling()) return;
     if (expect_token("SEMICOLON", "';'", cursor, previous_node)) return;
   }
+
+  function visit_namespace_stmt(cursor: TreeCursor) {
+    if (!cursor.firstChild()) return; // namespace
+    let previous_node = cursor.node.cursor();
+
+    if (!cursor.nextSibling()) return;
+    if (expect_token("IDENTIFIER", "identifier", cursor, previous_node)) return;
+    previous_node = cursor.node.cursor();
+
+    if (!cursor.nextSibling()) return;
+    if (expect_token("LBRACE", "lbrace", cursor, previous_node)) return;
+    previous_node = cursor.node.cursor();
+
+    if (!cursor.nextSibling()) return;
+    if (expect_token(["Namespace_declaration_stmt", "RBRACE"], "namespace declaration statement or '}'", cursor, previous_node)) return;
+    previous_node = cursor.node.cursor();
+    
+    while (cursor.name === "Namespace_declaration_stmt") {
+      let stmt_cursor = cursor.node.cursor();
+      stmt_cursor.firstChild();
+      
+      if (stmt_cursor.name === "Namespace_stmt") {
+        visit_namespace_stmt(stmt_cursor.node.cursor());
+      } else if (stmt_cursor.name === "Decl_stmt") {
+        visit_decl_stmt(stmt_cursor.node.cursor());
+      } else if (stmt_cursor.name === "Const_stmt") {
+        visit_const_stmt(stmt_cursor.node.cursor());
+      } else if (stmt_cursor.name === "Struct_decl") {
+        visit_struct_decl(stmt_cursor.node.cursor());
+      } else if (stmt_cursor.name === "Type_stmt") {
+        visit_type_stmt(stmt_cursor.node.cursor());
+      } else if (stmt_cursor.name === "Func") {
+        visit_func(stmt_cursor.node.cursor());
+      }
+
+      if (!cursor.nextSibling()) return; // Namespace_declaration_stmt or RBRACE
+      if (expect_token(["Namespace_declaration_stmt", "RBRACE"], "namespace declaration statement or '}'", cursor, previous_node)) return;
+      previous_node = cursor.node.cursor();
+    }
+  }
   
   function visit_continue_stmt(cursor: TreeCursor) {
     if (!cursor.firstChild()) return; // continue
@@ -446,6 +503,48 @@ export const syntax_linter = linter((context: EditorView) => {
 
     if (!cursor.nextSibling()) return;
     if (expect_token("SEMICOLON", "';'", cursor, previous_node)) return;
+  }
+
+  function visit_import_stmt(cursor: TreeCursor) {
+    if (!cursor.firstChild()) return; // import
+    let previous_node = cursor.node.cursor();
+
+    if (!cursor.nextSibling()) return;
+    if (expect_token("IDENTIFIER", "identifier", cursor, previous_node)) return;
+    previous_node = cursor.node.cursor();
+
+    while (cursor.name === "IDENTIFIER") {
+      while (cursor.name === "IDENTIFIER") {
+        if (!cursor.nextSibling() || cursor.name as string !== "COLON_COLON") break;
+        previous_node = cursor.node.cursor();
+
+        if (!cursor.nextSibling()) return;
+        if (expect_token("IDENTIFIER", "identifier", cursor, previous_node)) return;
+        previous_node = cursor.node.cursor();
+      }
+
+      if (cursor.name as string !== "COMMA") break; // COMMA or from
+      previous_node = cursor.node.cursor();
+
+      if (!cursor.nextSibling()) return;
+      if (expect_token("IDENTIFIER", "identifier", cursor, previous_node)) return;
+      previous_node = cursor.node.cursor();
+    }
+
+    previous_node = cursor.node.cursor();
+    if (cursor.name as string === "from") {
+      if (!cursor.nextSibling()) return; 
+      if (expect_token("IDENTIFIER", "identifier", cursor, previous_node)) return;
+
+      while (cursor.name === "IDENTIFIER") {
+        if (!cursor.nextSibling() || cursor.name as string !== "COLON_COLON") break;
+        previous_node = cursor.node.cursor();
+
+        if (!cursor.nextSibling()) return;
+        if (expect_token("IDENTIFIER", "identifier", cursor, previous_node)) return;
+        previous_node = cursor.node.cursor();
+      }
+    }
   }
 
   function visit_expr(cursor: TreeCursor) {
@@ -477,6 +576,8 @@ export const syntax_linter = linter((context: EditorView) => {
       visit_array_init(cursor.node.cursor());
     } else if (cursor.name === "Match") {
       visit_match_expr(cursor.node.cursor());
+    } else if (cursor.name === "Scope_resolution") {
+      visit_scope_resolution(cursor.node.cursor());
     } else if (cursor.name === "Primary") {
       visit_primary(cursor.node.cursor());
     } else if (cursor.name === "Grouping") {
@@ -564,8 +665,29 @@ export const syntax_linter = linter((context: EditorView) => {
     visit_call(cursor.node.cursor());
   }
 
+  // IDENTIFIER LPAREN maybe_arg_list !call RPAREN
   function visit_call(cursor: TreeCursor) {
-    // TODO: Implement this.
+    if (!cursor.firstChild()) return; // IDENTIFIER
+    if (!cursor.nextSibling()) return; // LPAREN
+    let previous_node = cursor.node.cursor();
+
+    if (!cursor.nextSibling()) return;
+    if (expect_token(["Expr", "RPAREN"], "expression or ')'", cursor, previous_node)) return;
+    previous_node = cursor.node.cursor();
+
+    while (cursor.name === "Expr") {
+      visit_expr(cursor.node.cursor());
+
+      if (!cursor.nextSibling()) return;
+      if (expect_token(["COMMA", "RPAREN"], "',' or ')'", cursor, previous_node)) return;
+      if (cursor.name as string === "RPAREN") return;
+      previous_node = cursor.node.cursor();
+
+      if (!cursor.nextSibling()) return;
+      if (expect_token(["Expr", "RPAREN"], "expression or ')'", cursor, previous_node)) return;
+      if (cursor.name as string === "RPAREN") return;
+      previous_node = cursor.node.cursor();
+    }
   }
 
   function visit_subscript(cursor: TreeCursor) {
@@ -655,7 +777,8 @@ export const syntax_linter = linter((context: EditorView) => {
       previous_node = cursor.node.cursor();
 
       if (!cursor.nextSibling()) return;
-      if (expect_token("Expr", "expression", cursor, previous_node)) return;
+      if (expect_token(["Expr", "RBRACKET"], "expression or ']'", cursor, previous_node)) return;
+      if (cursor.name as string === "RBRACKET") return;
       previous_node = cursor.node.cursor();
     }
   }
@@ -674,7 +797,7 @@ export const syntax_linter = linter((context: EditorView) => {
     previous_node = cursor.node.cursor();
 
     if (!cursor.nextSibling()) return;
-    if (expect_token(["Expr", "else"], "expression or else", cursor, previous_node)) return;
+    if (expect_token(["Expr", "else"], "expression or 'else'", cursor, previous_node)) return;
     previous_node = cursor.node.cursor();
 
     while (cursor.name as string === "Expr") {
@@ -711,6 +834,16 @@ export const syntax_linter = linter((context: EditorView) => {
 
     if (!cursor.nextSibling()) return;
     if (expect_token("RBRACE", "'}'", cursor, previous_node)) return;
+  }
+
+  function visit_scope_resolution(cursor: TreeCursor) {
+    if (!cursor.firstChild()) return; // IDENTIFIER
+    if (!cursor.nextSibling()) return; // COLON_COLON
+    let previous_node = cursor.node.cursor();
+
+    if (!cursor.nextSibling()) return;
+    if (expect_token("Expr", "expression", cursor, previous_node)) return;
+    visit_expr(cursor.node.cursor());
   }
   
   function visit_primary(cursor: TreeCursor) {}

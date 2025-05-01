@@ -1,5 +1,5 @@
 var z = 0;
-for var x: int = 0; x < 5; x += 1 do {
+for var x: int = 0; x < 5; x += 1 {
     if x == 3 {
         continue;
     }

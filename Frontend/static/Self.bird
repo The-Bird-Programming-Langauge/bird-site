@@ -1,6 +1,6 @@
 struct Complex {
-    float real;
-    float imaginary;
+    real: float;
+    imaginary: float;
     fn add(other: Complex) -> Complex {
         return Complex {
             real = self.real + other.real,

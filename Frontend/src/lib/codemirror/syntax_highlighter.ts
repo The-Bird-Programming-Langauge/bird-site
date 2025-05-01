@@ -75,6 +75,7 @@ export const taggedSyntax = styleTags({
   IDENTIFIER: t.variableName,
   INT_LITERAL: t.integer,
   FLOAT_LITERAL: t.float,
+  CHAR_LITERAL: t.string,
   STR_LITERAL: t.string,
 
   SINGLELINE_COMMENT: t.comment,

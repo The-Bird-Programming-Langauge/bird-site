@@ -1,5 +1,5 @@
 const p = Person {
-    name: "John McCarthy"
+    name = "John McCarthy"
 };
 print p.name; // John McCarthy
 print p.age; // 0

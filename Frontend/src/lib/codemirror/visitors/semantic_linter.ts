@@ -5,6 +5,8 @@ import { TreeCursor } from "@lezer/common";
 import { linter, type Diagnostic } from "@codemirror/lint";
 import { syntaxTree } from "@codemirror/language";
 import { EditorView } from "@codemirror/view";
+import { ImportPath } from "../include/import_path";
+import { FunctionImportItem, ImportEnvironment, StructImportItem, TypeImportItem, VariableImportItem } from "../include/import_env";
 import { Environment } from "../include/sym_table";
 import { SemanticValue } from "../include/value";
 import { SemanticCallable } from "../include/callable";
@@ -13,22 +15,47 @@ import { SemanticType } from "../include/type";
 export const semantic_linter = linter((context: EditorView) => {
   let diagnostics: Array<Diagnostic> = [];
 
-  let env = new Environment<SemanticValue>(); env.push_env();
-  let call_table = new Environment<SemanticCallable>(); call_table.push_env();
-  let type_table = new Environment<SemanticType>(); type_table.push_env();
+  let standard_library = new ImportEnvironment();
+  init_standard_library();
+
+  const import_identifiers: Set<string> = new Set();
+
+  let env = new Environment<SemanticValue>();
+  env.push_env();
+
+  let call_table = new Environment<SemanticCallable>();
+  call_table.push_env();
+  init_call_table();
+
+  let type_table = new Environment<SemanticType>();
+  type_table.push_env();
+
   let loop_depth = 0;
   let function_depth = 0;
   let in_method = false;
-
-  call_table.declare("length", new SemanticCallable());
-  call_table.declare("push", new SemanticCallable());
-  call_table.declare("gc", new SemanticCallable());
-  call_table.declare("iter", new SemanticCallable());
 
   const cursor: TreeCursor = syntaxTree(context.state).cursor();
   visit_program(cursor.node.cursor());
 
   return diagnostics;
+
+  function init_standard_library() {
+    standard_library.add_item(new ImportPath("Math::Trig::arccos"), new FunctionImportItem);
+    standard_library.add_item(new ImportPath("Math::Trig::arcsin"), new FunctionImportItem);
+    standard_library.add_item(new ImportPath("Math::Trig::arctan"), new FunctionImportItem);
+    standard_library.add_item(new ImportPath("Math::Trig::cos"), new FunctionImportItem);
+    standard_library.add_item(new ImportPath("Math::Trig::sin"), new FunctionImportItem);
+    standard_library.add_item(new ImportPath("Math::Trig::tan"), new FunctionImportItem);
+    standard_library.add_item(new ImportPath("Math::Trig::to_degrees"), new FunctionImportItem);
+    standard_library.add_item(new ImportPath("Math::Trig::Triangle"), new StructImportItem);
+  }
+
+  function init_call_table() {
+    call_table.declare("length", new SemanticCallable());
+    call_table.declare("push", new SemanticCallable());
+    call_table.declare("gc", new SemanticCallable());
+    call_table.declare("iter", new SemanticCallable());
+  }
 
   function visit_program(cursor: TreeCursor) {
     if (!cursor.firstChild()) return; // Top_level_stmt
@@ -89,9 +116,7 @@ export const semantic_linter = linter((context: EditorView) => {
             message: `Identifier '${identifier_text}' is already declared.`,
           });
         } else {
-          const mutable_value = new SemanticValue();
-          mutable_value.is_mutable = true;
-          env.declare(identifier_text, mutable_value);
+          env.declare(identifier_text, new SemanticValue(true));
         }
 
         if (!cursor.nextSibling()) return; // COLON
@@ -177,12 +202,16 @@ export const semantic_linter = linter((context: EditorView) => {
       visit_return_stmt(cursor.node.cursor());
     } else if (cursor.name === "Break_stmt") {
       visit_break_stmt(cursor.node.cursor());
+    } else if (cursor.name === "Namespace_stmt") {
+      visit_namespace_stmt(cursor.node.cursor());
     } else if (cursor.name === "Continue_stmt") {
       visit_continue_stmt(cursor.node.cursor());
     } else if (cursor.name === "Expr_stmt") {
       visit_expr_stmt(cursor.node.cursor());
     } else if (cursor.name === "Type_stmt") {
       visit_type_stmt(cursor.node.cursor());
+    } else if (cursor.name === "Import_stmt") {
+      visit_import_stmt(cursor.node.cursor());
     }
   }
   
@@ -200,9 +229,7 @@ export const semantic_linter = linter((context: EditorView) => {
         message: `Identifier '${identifier_text}' is already declared.`,
       });
     } else {
-      const mutable_value = new SemanticValue();
-      mutable_value.is_mutable = true;
-      env.declare(identifier_text, mutable_value);
+      env.declare(identifier_text, new SemanticValue(true));
     }
 
     if (!cursor.nextSibling()) return; // COLON or EQUAL
@@ -312,12 +339,14 @@ export const semantic_linter = linter((context: EditorView) => {
 
     try {
       if (!cursor.firstChild()) return; // for
-      if (!cursor.nextSibling()) return; // Stmt or SEMICOLON
+      if (!cursor.nextSibling()) return; // Stmt or IDENTIFIER or SEMICOLON
       if (cursor.name === "Stmt") {
         visit_stmt(cursor.node.cursor());
+      } else if (cursor.name === "IDENTIFIER") {
+        env.declare(get_text(cursor.node.cursor()), new SemanticValue(true));
       }
 
-      if (!cursor.nextSibling()) return; // Expr or SEMICOLON
+      if (!cursor.nextSibling()) return; // Expr or in or SEMICOLON
       if (cursor.name === "Expr") {
         visit_expr(cursor.node.cursor());
         if (!cursor.nextSibling()) return; // SEMICOLON
@@ -382,6 +411,34 @@ export const semantic_linter = linter((context: EditorView) => {
       });
     }
   }
+
+  function visit_namespace_stmt(cursor: TreeCursor) {
+    if (!cursor.firstChild()) return; // namespace
+    if (!cursor.nextSibling()) return; // IDENTIFIER
+    if (!cursor.nextSibling()) return; // LBRACE
+    if (!cursor.nextSibling()) return; // Namespace_declaration_stmt or RBRACE
+    
+    while (cursor.name as string === "Namespace_declaration_stmt") {
+      let stmt_cursor = cursor.node.cursor();
+      stmt_cursor.firstChild();
+
+      if (stmt_cursor.name === "Namespace_stmt") {
+        visit_namespace_stmt(stmt_cursor.node.cursor());
+      } else if (stmt_cursor.name === "Decl_stmt") {
+        visit_decl_stmt(stmt_cursor.node.cursor());
+      } else if (stmt_cursor.name === "Const_stmt") {
+        visit_const_stmt(stmt_cursor.node.cursor());
+      } else if (stmt_cursor.name === "Struct_decl") {
+        visit_struct_decl(stmt_cursor.node.cursor());
+      } else if (stmt_cursor.name === "Type_stmt") {
+        visit_type_stmt(stmt_cursor.node.cursor());
+      } else if (stmt_cursor.name === "Func") {
+        visit_func(stmt_cursor.node.cursor());
+      }
+
+      if (!cursor.nextSibling()) return; // Namespace_declaration_stmt or RBRACE
+    }
+  }
   
   function visit_continue_stmt(cursor: TreeCursor) {
     if (!cursor.firstChild()) return; // continue
@@ -423,6 +480,96 @@ export const semantic_linter = linter((context: EditorView) => {
     }
   }
 
+  function visit_import_stmt(cursor: TreeCursor) {
+    if (!cursor.firstChild()) return; // import
+    if (!cursor.nextSibling()) return; // IDENTIFIER
+    let import_paths: ImportPath[] = [];
+    let import_path_edge_nodes: [TreeCursor, TreeCursor | null][] = [];
+
+    while (cursor.name === "IDENTIFIER") {
+      import_paths.push(new ImportPath(get_text(cursor.node.cursor())));
+      import_path_edge_nodes.push([cursor.node.cursor(), null]);
+
+      while (cursor.name === "IDENTIFIER") {
+        if (!cursor.nextSibling() || cursor.name as string !== "COLON_COLON") break; // COLON_COLON
+        if (!cursor.nextSibling() || cursor.name !== "IDENTIFIER") break; // IDENTIFIER
+        import_paths[import_paths.length - 1].add_string_token(get_text(cursor.node.cursor()));
+        import_path_edge_nodes[import_paths.length - 1][1] = cursor.node.cursor();
+      }
+
+      if (cursor.name as string !== "COMMA") break; // COMMA or from
+      if (!cursor.nextSibling()) break; // IDENTIFIER
+    }
+
+    if (cursor.name as string === "from" && cursor.nextSibling() && cursor.name as string === "IDENTIFIER") {
+      let from_path: ImportPath = new ImportPath(get_text(cursor.node.cursor()));
+  
+      while (cursor.name === "IDENTIFIER") {
+        if (!cursor.nextSibling() || cursor.name as string !== "COLON_COLON") break; // COLON_COLON
+        if (!cursor.nextSibling() || cursor.name !== "IDENTIFIER") break; // IDENTIFIER
+        from_path.add_string_token(get_text(cursor.node.cursor()));
+      }
+
+      for (let i = 0; i < import_paths.length; i += 1) {
+        import_paths[i].insert_import_path_at_beginning(from_path);
+      }
+    }
+
+    for (let i = 0; i < import_paths.length; i += 1) {
+      if (!standard_library.contains_item(import_paths[i])) {
+        diagnostics.push({
+          from: import_path_edge_nodes[i][0].from,
+          to: import_path_edge_nodes[i][1]?.to ?? import_path_edge_nodes[i][0].to,
+          severity: "error",
+          message: `Import item with path '${import_paths[i].string_path}' does not exist in the standard library.`,
+        });
+        continue;
+      }
+
+      let [recursive_import_paths, recursive_import_items] = standard_library.get_items_recursively(import_paths[i]);
+      let repeated_imports: Set<string> = new Set();
+
+      for (let j = 0; j < recursive_import_paths.length; j += 1) {
+        if (import_identifiers.has(recursive_import_paths[j].string_path)) {
+          repeated_imports.add(recursive_import_paths[j].string_path);
+        } else {
+          import_identifiers.add(recursive_import_paths[j].string_path);
+          let import_path_back = recursive_import_paths[j].path[recursive_import_paths[j].path.length - 1];
+
+          if (recursive_import_items[j] instanceof VariableImportItem) {
+            env.declare(import_path_back, new SemanticValue());
+          } else if (recursive_import_items[j] instanceof FunctionImportItem) {
+            call_table.declare(import_path_back, new SemanticCallable());
+          } else if (recursive_import_items[j] instanceof TypeImportItem) {
+            type_table.declare(import_path_back, new SemanticType());
+          }
+        }
+      }
+
+      if (repeated_imports.size > 0) {
+        let repeated_imports_string = "";
+
+        let j = 0;
+        for (let item of repeated_imports) {
+          repeated_imports_string += item;
+
+          if (j < repeated_imports.size - 1) {
+            repeated_imports_string += ", ";
+          }
+
+          j += 1;
+        }
+
+        diagnostics.push({
+          from: import_path_edge_nodes[i][0].from,
+          to: import_path_edge_nodes[i][1]?.to ?? import_path_edge_nodes[i][0].to,
+          severity: "error",
+          message: `Import path overrides the following import items that already exists in the global namespace: ${repeated_imports_string}`,
+        });
+      }
+    }
+  }
+
   function visit_expr(cursor: TreeCursor) {
     if (!cursor.firstChild()) return; // expr
 
@@ -452,6 +599,8 @@ export const semantic_linter = linter((context: EditorView) => {
       visit_array_init(cursor.node.cursor());
     } else if (cursor.name === "Match") {
       visit_match_expr(cursor.node.cursor());
+    } else if (cursor.name === "Scope_resolution") {
+      visit_scope_resolution(cursor.node.cursor());
     } else if (cursor.name === "Primary") {
       visit_primary(cursor.node.cursor());
     } else if (cursor.name === "Grouping") {
@@ -542,7 +691,18 @@ export const semantic_linter = linter((context: EditorView) => {
   }
 
   function visit_call(cursor: TreeCursor) {
-    // TODO: Implement this.
+    if (!cursor.firstChild()) return; // IDENTIFIER
+    const identifier_node = cursor.node.cursor();
+    const identifier_text = get_text(identifier_node);
+
+    if (!call_table.contains(identifier_text)) {
+      diagnostics.push({
+        from: identifier_node.from,
+        to: identifier_node.to,
+        severity: "error",
+        message: `Function call identifier '${identifier_text}' is not declared.`,
+      });
+    }
   }
 
   function visit_subscript(cursor: TreeCursor) {
@@ -620,6 +780,13 @@ export const semantic_linter = linter((context: EditorView) => {
 
     if (cursor.name === "RBRACE") return; // else
     if (!cursor.nextSibling()) return; // FAT_ARROW
+    if (!cursor.nextSibling() || cursor.name as string !== "Expr") return; // Expr
+    visit_expr(cursor.node.cursor());
+  }
+
+  function visit_scope_resolution(cursor: TreeCursor) {
+    if (!cursor.firstChild()) return; // IDENTIFIER
+    if (!cursor.nextSibling()) return; // COLON_COLON
     if (!cursor.nextSibling() || cursor.name as string !== "Expr") return; // Expr
     visit_expr(cursor.node.cursor());
   }

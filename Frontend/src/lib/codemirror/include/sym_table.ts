@@ -50,6 +50,17 @@ export class Environment<T> {
     this.envs[this.envs.length - 1].set(identifier, value);
   }
 
+  declare_global(identifier: string, value: T) {
+    if (this.envs.length === 0) {
+      throw new Error(`no environment to declare variable ${identifier} into`);
+    }
+    if (this.envs[0].has(identifier)) {
+      throw new Error(`variable ${identifier} already declared in global environment`);
+    }
+
+    this.envs[0].set(identifier, value);
+  }
+
   set(identifier: string, value: T) {
     for (let i = this.envs.length - 1; i >= 0; i--) {
       if (this.envs[i].has(identifier)) {

@@ -1,5 +1,4 @@
-// Parenthesis are optional
-while (true) {
+while true {
     print "hello";
 }
 // Prints hello an infinite amount of times.
