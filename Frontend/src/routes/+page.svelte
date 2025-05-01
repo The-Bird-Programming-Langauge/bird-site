@@ -180,7 +180,8 @@
 						{ value: '3or5', name: 'Challenge: 3 or 5' },
 						{ value: 'climbingStairs', name: 'Challenge: Climbing Stairs' },
 						{ value: 'preorderSearch', name: 'Challenge: Preorder Search' },
-						{ value: 'isEven', name: 'Challenge: Is Even' }
+						{ value: 'isEven', name: 'Challenge: Is Even' },
+						{ value: 'add', name: 'Challenge: Add Two Numbers' }
 					]}
 					onchange={async (ev: Event & { currentTarget: EventTarget & HTMLSelectElement }) => {
 						textEditorCode.set(await getCode(ev.currentTarget.value));
