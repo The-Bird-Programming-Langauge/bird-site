@@ -5,10 +5,11 @@
 	import { textEditorCode } from '$lib/text-editor-code';
 	import { get_extensions } from '$lib/codemirror/codemirror_helpers';
 	import { oneDarkTheme } from '@codemirror/theme-one-dark';
-	import { TabItem, Tabs } from 'flowbite-svelte';
+	import { Label, Select, TabItem, Tabs } from 'flowbite-svelte';
 	import CodeMirror from 'svelte-codemirror-editor';
 	import BirdButton from '../../components/BirdButton.svelte';
 	import Header from '../../components/header.svelte';
+	import { getCode } from '$lib/getCode';
 
 	let pressed = new Set<string>();
 	async function handleKeys() {
@@ -32,15 +33,33 @@
 <div class="flex min-h-full flex-col">
 	<Header></Header>
 	<div class="bg-primary-400 flex items-end justify-end p-2">
-		<BirdButton
-			color="dark"
-			onclick={async () => {
-				$consoleOutput = [];
-				await compileBird($textEditorCode);
-			}}
-		>
-			Run
-		</BirdButton>
+		<div class="flex flex-row gap-4">
+			<Label for="code examples">Code Examples</Label>
+			<Select
+				id="code examples"
+				class="rounded-md"
+				items={[
+					{ value: 'helloWorld', name: 'Hello, World!' },
+					{ value: 'fibonacci', name: 'Fibonacci' },
+					{ value: 'factorial', name: 'Factorial' },
+					{ value: '3or5', name: 'Challenge: 3 or 5' },
+					{ value: 'climbingStairs', name: 'Challenge: Climbing Stairs' },
+					{ value: 'preorderSearch', name: 'Challenge: Preorder Search' }
+				]}
+				onchange={async (ev: Event & { currentTarget: EventTarget & HTMLSelectElement }) => {
+					textEditorCode.set(await getCode(ev.currentTarget.value));
+				}}
+			></Select>
+			<BirdButton
+				color="dark"
+				onclick={async () => {
+					$consoleOutput = [];
+					await compileBird($textEditorCode);
+				}}
+			>
+				Run
+			</BirdButton>
+		</div>
 	</div>
 	<div class="flex w-full grow bg-[#282c34]">
 		<CodeMirror
