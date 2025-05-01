@@ -1,10 +1,11 @@
 /* --------------------------------------------------- CHALLENGE ------------------------------------- 
-Return the sum of all the numbers below n that are multiples of 3 or 5
+You are climbing a staircase. It takes n steps to reach the top.
+Each time you can either climb 1 or 2 steps. In how many distinct ways can you climb to the top?
 ----------------------------------------------------------------------------------------------------------- */
 
-fn sum_of_3_or_5(n: int) -> int {
+fn climb_stairs(n: int) -> int {
     // write code here!!
-    return 0;
+    return 0; 
 }
 
 /* --------------------------------------------- TESTS ------------------------------------------- */
@@ -16,15 +17,18 @@ struct Answer {
 
 fn test() {
     const cases: Answer[] = [
-        Answer {name = "0", input = 0, output = 0},
-        Answer {name = "10", input = 10, output = 23},
-        Answer {name = "large", input = 1000, output = 233168},
-        Answer {name = "larger", input = 10000, output = 23331668},
+        Answer {name = "1", input = 1, output = 1},
+        Answer {name = "3", input = 2, output = 2},
+        Answer {name = "3", input = 3, output = 3},
+        Answer {name = "4", input = 4, output = 5},
+        Answer {name = "5", input = 5, output = 8},
+        Answer {name = "6", input = 6, output = 13},
+        Answer {name = "7", input = 7, output = 21},
+        Answer {name = "8", input = 8, output = 34}
     ];
 
     for case in iter(cases) {
-    print true + 3;
-        print case.name + ": " + (sum_of_3_or_5(case.input) == case.output ? "passed" : "FAILED");
+        print case.name + ": " + (climb_stairs(case.input) == case.output ? "passed" : "FAILED");
     }
 
     print "done!";
