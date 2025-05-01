@@ -18,7 +18,7 @@ struct Answer {
 fn test() {
     const cases: Answer[] = [
         Answer {name = "1", input = 1, output = 1},
-        Answer {name = "2", input = 2, output = 2},
+        Answer {name = "3", input = 2, output = 2},
         Answer {name = "3", input = 3, output = 3},
         Answer {name = "4", input = 4, output = 5},
         Answer {name = "5", input = 5, output = 8},
