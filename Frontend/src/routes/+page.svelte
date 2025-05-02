@@ -53,10 +53,10 @@
 			path: 'modernFeatures'
 		},
 		{
-			title: 'Expressive Types',
+			title: 'Automatic Memory Management',
 			subtitle:
-				'Bird has expressive types that make it easy to write safe and efficient code. Bird is a statically typed language that is designed to catch errors at compile time.',
-			path: 'expressiveTypes'
+				'Forget about pointers! Bird provides a garbage collector so you can focus on writing beautiful and performant code.',
+			path: 'automaticMemoryManagement'
 		}
 	];
 </script>

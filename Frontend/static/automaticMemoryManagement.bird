@@ -1,0 +1,5 @@
+const tree: Node = Node {
+	val = 1,
+	left = Node { val = 2 },
+	right = Node { val = 3 }
+}; // automatically cleaned up!
