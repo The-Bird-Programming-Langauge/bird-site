@@ -32,40 +32,7 @@
 
 <div class="flex min-h-full flex-col">
 	<Header></Header>
-	<div class="bg-primary-400 flex items-end justify-end p-2">
-		<div class="flex flex-row gap-4">
-			<Label for="code examples">Code Examples</Label>
-			<Select
-				id="code examples"
-				class="rounded-md"
-				items={[
-					{ value: 'helloWorld', name: 'Hello, World!' },
-					{ value: 'fibonacci', name: 'Fibonacci' },
-					{ value: 'factorial', name: 'Factorial' },
-					{ value: 'sestosaVVirginica', name: 'Linear Regression: Sestosa Virginica' },
-					{ value: 'sestosaVVersicolor', name: 'Linear Regression: Sestosa Versicolor' },
-					{ value: 'versicolorVVirginica', name: 'Linear Regression: Versicolor Virginica' },
-					{ value: '3or5', name: 'Challenge: 3 or 5' },
-					{ value: 'climbingStairs', name: 'Challenge: Climbing Stairs' },
-					{ value: 'preorderSearch', name: 'Challenge: Preorder Search' },
-					{ value: 'isEven', name: 'Challenge: Is Even' },
-					{ value: 'add', name: 'Challenge: Add Two Numbers' }
-				]}
-				onchange={async (ev: Event & { currentTarget: EventTarget & HTMLSelectElement }) => {
-					textEditorCode.set(await getCode(ev.currentTarget.value));
-				}}
-			></Select>
-			<BirdButton
-				color="dark"
-				onclick={async () => {
-					$consoleOutput = [];
-					await compileBird($textEditorCode);
-				}}
-			>
-				Run
-			</BirdButton>
-		</div>
-	</div>
+
 	<div class="flex w-full grow bg-[#282c34]">
 		<CodeMirror
 			extensions={[
@@ -84,6 +51,40 @@
 		></CodeMirror>
 	</div>
 	<div class="bg-slate-900">
+		<div class="bg-primary-400 flex items-end justify-end p-2">
+			<div class="flex flex-row gap-4">
+				<Label for="code examples">Code Examples</Label>
+				<Select
+					id="code examples"
+					class="rounded-md"
+					items={[
+						{ value: 'helloWorld', name: 'Hello, World!' },
+						{ value: 'fibonacci', name: 'Fibonacci' },
+						{ value: 'factorial', name: 'Factorial' },
+						{ value: 'sestosaVVirginica', name: 'Linear Regression: Sestosa Virginica' },
+						{ value: 'sestosaVVersicolor', name: 'Linear Regression: Sestosa Versicolor' },
+						{ value: 'versicolorVVirginica', name: 'Linear Regression: Versicolor Virginica' },
+						{ value: '3or5', name: 'Challenge: 3 or 5' },
+						{ value: 'climbingStairs', name: 'Challenge: Climbing Stairs' },
+						{ value: 'preorderSearch', name: 'Challenge: Preorder Search' },
+						{ value: 'isEven', name: 'Challenge: Is Even' },
+						{ value: 'add', name: 'Challenge: Add Two Numbers' }
+					]}
+					onchange={async (ev: Event & { currentTarget: EventTarget & HTMLSelectElement }) => {
+						textEditorCode.set(await getCode(ev.currentTarget.value));
+					}}
+				></Select>
+				<BirdButton
+					color="dark"
+					onclick={async () => {
+						$consoleOutput = [];
+						await compileBird($textEditorCode);
+					}}
+				>
+					Run
+				</BirdButton>
+			</div>
+		</div>
 		<Tabs contentClass="" tabStyle="underline">
 			<TabItem
 				title="Result"
